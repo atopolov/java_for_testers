@@ -1,5 +1,8 @@
 package ru.st.geometry;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public record Triangle(double a, double b, double c) {
 
     public Triangle {
@@ -29,4 +32,25 @@ public record Triangle(double a, double b, double c) {
         );
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Triangle other = (Triangle) obj;
+
+        double[] sidesThis = {a, b, c};
+        double[] sidesOther = {other.a, other.b, other.c};
+        Arrays.sort(sidesThis);
+        Arrays.sort(sidesOther);
+
+        return Arrays.equals(sidesThis, sidesOther);
+    }
+
+    @Override
+    public int hashCode() {
+        double[] sides = {a, b, c};
+        Arrays.sort(sides);
+        return Arrays.hashCode(sides);
+    }
 }
