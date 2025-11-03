@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: org.seleniumhq.selenium:selenium-http:4.38.0" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.seleniumhq.selenium" artifactId="selenium-http" version="4.38.0" baseVersion="4.38.0" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.seleniumhq.selenium/selenium-http/4.38.0/37a9bd22c8c92633e4dd2f1402f6e73fdd555b7e/selenium-http-4.38.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
