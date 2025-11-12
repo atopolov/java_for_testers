@@ -3,7 +3,7 @@ package manager;
 import model.GroupData;
 import org.openqa.selenium.By;
 
-public class GroupHelper extends HelperBase{
+public class GroupHelper extends HelperBase {
 
     public GroupHelper(ApplicationManager manager) {
         super(manager);

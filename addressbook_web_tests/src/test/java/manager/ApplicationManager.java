@@ -13,10 +13,12 @@ public class ApplicationManager {
 
     public static final String URL = "http://localhost/addressbook/";
     public static final Dimension DIMENSION = new Dimension(1650, 818);
+    public static final int SECONDS = 5;
 
     protected WebDriver driver;
     private LoginHelper session;
     private GroupHelper groups;
+    private ContactHelper contacts;
 
     public void init(String browser) {
         if (driver == null) {
@@ -29,7 +31,7 @@ public class ApplicationManager {
             }
             Runtime.getRuntime().addShutdownHook(new Thread(() -> driver.quit()));
 
-            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(SECONDS));
             driver.manage().window().setSize(DIMENSION);
             driver.get(URL);
             session().login("admin", "secret");
@@ -48,6 +50,13 @@ public class ApplicationManager {
             groups = new GroupHelper(this);
         }
         return groups;
+    }
+
+    public ContactHelper contacts() {
+        if (contacts == null) {
+            contacts = new ContactHelper(this);
+        }
+        return contacts;
     }
 
     public boolean isElementPresent(By locator) {

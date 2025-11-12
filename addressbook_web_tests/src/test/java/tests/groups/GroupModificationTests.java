@@ -1,10 +1,13 @@
-package tests;
+package tests.groups;
 
 import model.GroupData;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import tests.TestBase;
 
-public class GroupModificationTests extends TestBase{
+public class GroupModificationTests extends TestBase {
 
+    @DisplayName("Модификация группы")
     @Test
     public void CanModificationGroup() {
         if (!app.groups().isGroupPresent()) {
