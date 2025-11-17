@@ -1,10 +1,10 @@
 package tests.contacts;
 
-import model.ContactsData;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tests.TestBase;
 
+import static model.ContactsDataGenerator.randomContactsData;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ContactDeletionTests extends TestBase {
@@ -13,7 +13,7 @@ public class ContactDeletionTests extends TestBase {
     @Test
     public void deleteContactTest() {
         if (app.contacts().getContactCount() == 0) {
-            app.contacts().createContact(new ContactsData("SomeName", "SomeMiddleName", "SomeLastName", "SomeAddress", "SomePhone"));
+            app.contacts().createContact(randomContactsData());
         }
         int contactCount = app.contacts().getContactCount();
         app.contacts().removeContact();
@@ -25,7 +25,7 @@ public class ContactDeletionTests extends TestBase {
     @Test
     public void deleteAllContactsTest() {
         if (app.contacts().getContactCount() == 0) {
-            app.contacts().createContact(new ContactsData("SomeName", "SomeMiddleName", "SomeLastName", "SomeAddress", "SomePhone"));
+            app.contacts().createContact(randomContactsData());
         }
         app.contacts().removeAllContacts();
         assertEquals(0, app.contacts().getContactCount());

@@ -1,46 +1,50 @@
 package tests.groups;
 
 import model.GroupData;
-import static model.GroupDataGenerator.*;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import tests.TestBase;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static model.GroupDataGenerator.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GroupCreationTests extends TestBase {
 
+    public static List<GroupData> multipleGroupsProvider() {
+        List<GroupData> groups = new ArrayList<>();
+
+        groups.add(new GroupData());
+        groups.add(new GroupData().withName(randomGroupName()));
+        groups.add(randomGroup());
+        groups.add(randomGroup());
+        groups.add(randomGroup());
+
+        String[] names = {"", randomGroupName()};
+        String[] headers = {"", randomGroupHeader()};
+        String[] footers = {"", randomGroupFooter()};
+
+        for (String name : names) {
+            for (String header : headers) {
+                for (String footer : footers) {
+                    groups.add(new GroupData(name, header, footer));
+                }
+            }
+        }
+
+        return groups;
+    }
+
     @DisplayName("Создание группы")
-    @Test
-    public void GroupCreationTest() {
+    @ParameterizedTest
+    @MethodSource("multipleGroupsProvider")
+    public void GroupCreationTest(GroupData group) {
         int groupCount = app.groups().getGroupCount();
-        app.groups().createGroup(randomGroup());
+        app.groups().createGroup(group);
         int newGroupCount = app.groups().getGroupCount();
         assertEquals(groupCount + 1, newGroupCount);
     }
-
-    @DisplayName("Создание группы с пустым названием")
-    @Test
-    public void GroupCreationTestWithEmptyName() {
-        app.groups().createGroup(new GroupData());
-    }
-
-    @DisplayName("Создание группы с именем")
-    @Test
-    public void GroupCreationTestWithName() {
-        app.groups().createGroup(new GroupData().withName(randomGroupName()));
-    }
-
-    @DisplayName("Создание нескольких групп")
-    @Test
-    public void MultipleGroupsCreationTest() {
-        int n = 5;
-        int groupCount = app.groups().getGroupCount();
-        for (int i = 0; i < n; i++){
-            app.groups().createGroup(randomGroup());
-        }
-        int newGroupCount = app.groups().getGroupCount();
-        assertEquals(groupCount + n, newGroupCount);
-    }
-
 }
