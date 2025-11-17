@@ -33,14 +33,12 @@ public class ContactHelper extends HelperBase {
     private void fillContactsForm(ContactsData contacts) {
         click(By.name("firstname"));
         type(By.name("firstname"), contacts.firstname());
-        click(By.name("middlename"));
-        type(By.name("middlename"), contacts.middlename());
         click(By.name("lastname"));
         type(By.name("lastname"), contacts.lastname());
         click(By.name("address"));
         type(By.name("address"), contacts.address());
         click(By.name("home"));
-        type(By.name("home"), contacts.home());
+        type(By.name("home"), contacts.phone());
         click(By.name("email"));
         type(By.name("email"), contacts.email());
     }

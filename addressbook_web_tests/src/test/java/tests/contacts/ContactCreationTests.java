@@ -1,6 +1,7 @@
 package tests.contacts;
 
 import model.ContactsData;
+import static model.ContactsDataGenerator.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tests.TestBase;
@@ -13,7 +14,7 @@ public class ContactCreationTests extends TestBase {
     @Test
     public void createNewContact() {
         int contactCount = app.contacts().getContactCount();
-        app.contacts().createContact(new ContactsData("Some Name", "Some Middle Name", "Some Last Name", "Some Address", "Some Phone", "random@random.com"));
+        app.contacts().createContact(randomContactsData());
         int newContactCount = app.contacts().getContactCount();
         assertEquals(contactCount + 1, newContactCount);
     }
@@ -27,7 +28,19 @@ public class ContactCreationTests extends TestBase {
     @DisplayName("Создание контакта с именем")
     @Test
     public void createNewContactWithName() {
-        app.contacts().createContact(new ContactsData().withName("Some Name"));
+        app.contacts().createContact(new ContactsData().withName(randomFirstName()));
+    }
+
+    @DisplayName("Создание нескольких контактов")
+    @Test
+    public void createMultipleContacts() {
+        int n = 5;
+        int contactCount = app.contacts().getContactCount();
+        for (int i = 0; i < n; i++) {
+            app.contacts().createContact(randomContactsData());
+        }
+        int newContactCount = app.contacts().getContactCount();
+        assertEquals(contactCount + n, newContactCount);
     }
 
 }

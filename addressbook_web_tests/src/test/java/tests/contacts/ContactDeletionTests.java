@@ -13,7 +13,7 @@ public class ContactDeletionTests extends TestBase {
     @Test
     public void deleteContactTest() {
         if (app.contacts().getContactCount() == 0) {
-            app.contacts().createContact(new ContactsData("SomeName", "SomeMiddleName", "SomeLastName", "SomeAddress", "SomePhone", "random@random.com"));
+            app.contacts().createContact(new ContactsData("SomeName", "SomeMiddleName", "SomeLastName", "SomeAddress", "SomePhone"));
         }
         int contactCount = app.contacts().getContactCount();
         app.contacts().removeContact();
@@ -25,7 +25,7 @@ public class ContactDeletionTests extends TestBase {
     @Test
     public void deleteAllContactsTest() {
         if (app.contacts().getContactCount() == 0) {
-            app.contacts().createContact(new ContactsData("SomeName", "SomeMiddleName", "SomeLastName", "SomeAddress", "SomePhone", "random@random.com"));
+            app.contacts().createContact(new ContactsData("SomeName", "SomeMiddleName", "SomeLastName", "SomeAddress", "SomePhone"));
         }
         app.contacts().removeAllContacts();
         assertEquals(0, app.contacts().getContactCount());

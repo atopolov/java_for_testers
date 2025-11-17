@@ -1,34 +1,29 @@
 package model;
 
-public record ContactsData(String firstname, String middlename, String lastname, String address, String home,
-                           String email) {
+public record ContactsData(String firstname, String lastname, String address, String phone, String email
+) {
 
     public ContactsData() {
-        this("", "", "", "", "", "");
+        this("", "", "", "", "");
     }
 
     public ContactsData withName(String name) {
-        return new ContactsData(name, this.middlename, this.lastname, this.address, this.home, this.email);
-    }
-
-    public ContactsData withMiddleName(String middlename) {
-        return new ContactsData(this.firstname, middlename, this.lastname, this.address, this.home, this.email);
-    }
-
-    public ContactsData withLastName(String lastname) {
-        return new ContactsData(this.firstname, this.middlename, lastname, this.address, this.home, this.email);
-    }
-
-    public ContactsData withAddress(String address) {
-        return new ContactsData(this.firstname, this.middlename, this.lastname, address, this.home, this.email);
-    }
-
-    public ContactsData withPhone(String home) {
-        return new ContactsData(this.firstname, this.middlename, this.lastname, this.address, home, this.email);
+        return new ContactsData(name, this.lastname, this.address, this.phone, this.email);
     }
 
     public ContactsData withEmail(String email) {
-        return new ContactsData(this.firstname, this.middlename, this.lastname, this.address, this.home, email);
+        return new ContactsData(this.firstname, this.lastname, this.address, this.phone, email);
     }
 
+    public ContactsData withLastName(String lastname) {
+        return new ContactsData(this.firstname, lastname, this.address, this.phone, this.email);
+    }
+
+    public ContactsData withAddress(String address) {
+        return new ContactsData(this.firstname, this.lastname, address, this.phone, this.email);
+    }
+
+    public ContactsData withPhone(String home) {
+        return new ContactsData(this.firstname, this.lastname, this.address, phone, this.email);
+    }
 }

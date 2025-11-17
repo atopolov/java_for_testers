@@ -1,6 +1,7 @@
 package tests.groups;
 
 import model.GroupData;
+import static model.GroupDataGenerator.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tests.TestBase;
@@ -13,7 +14,7 @@ public class GroupCreationTests extends TestBase {
     @Test
     public void GroupCreationTest() {
         int groupCount = app.groups().getGroupCount();
-        app.groups().createGroup(new GroupData("new group name", "new group header", "new group footer"));
+        app.groups().createGroup(randomGroup());
         int newGroupCount = app.groups().getGroupCount();
         assertEquals(groupCount + 1, newGroupCount);
     }
@@ -27,7 +28,19 @@ public class GroupCreationTests extends TestBase {
     @DisplayName("Создание группы с именем")
     @Test
     public void GroupCreationTestWithName() {
-        app.groups().createGroup(new GroupData().withName("some name"));
+        app.groups().createGroup(new GroupData().withName(randomGroupName()));
+    }
+
+    @DisplayName("Создание нескольких групп")
+    @Test
+    public void MultipleGroupsCreationTest() {
+        int n = 5;
+        int groupCount = app.groups().getGroupCount();
+        for (int i = 0; i < n; i++){
+            app.groups().createGroup(randomGroup());
+        }
+        int newGroupCount = app.groups().getGroupCount();
+        assertEquals(groupCount + n, newGroupCount);
     }
 
 }

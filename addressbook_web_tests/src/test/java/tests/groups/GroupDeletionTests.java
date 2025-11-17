@@ -1,6 +1,6 @@
 package tests.groups;
 
-import model.GroupData;
+import static model.GroupDataGenerator.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tests.TestBase;
@@ -13,7 +13,7 @@ public class GroupDeletionTests extends TestBase {
     @Test
     public void GroupDeletionTest() {
         if (app.groups().getGroupCount() == 0) {
-            app.groups().createGroup(new GroupData("new group name", "new group header", "new group footer"));
+            app.groups().createGroup(randomGroup());
         }
         int groupCount = app.groups().getGroupCount();
         app.groups().removeGroup();
@@ -25,7 +25,7 @@ public class GroupDeletionTests extends TestBase {
     @Test
     public void GroupDeletionAllTest() {
         if (app.groups().getGroupCount() == 0) {
-            app.groups().createGroup(new GroupData("new group name", "new group header", "new group footer"));
+            app.groups().createGroup(randomGroup());
         }
         app.groups().removeAllGroups();
         assertEquals(0, app.groups().getGroupCount());
