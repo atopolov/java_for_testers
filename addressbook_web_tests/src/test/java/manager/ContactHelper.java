@@ -49,15 +49,30 @@ public class ContactHelper extends HelperBase {
         click(By.linkText("home page"));
     }
 
-    public boolean isContactPresent() {
-        return manager.isElementPresent(By.name("selected[]"));
-    }
-
     private void deleteContact() {
         click(By.name("delete"));
     }
 
     private void selectContact() {
         click(By.name("selected[]"));
+    }
+
+    public int getContactCount() {
+        return manager.driver.findElements(By.name("selected[]")).size();
+    }
+
+    public void modifyContact(ContactsData modifiedContact) {
+        openContactPage();
+        fillContactsForm(modifiedContact);
+        submitEditedContact();
+        returnToHomePage();
+    }
+
+    private void openContactPage() {
+        click(By.xpath("//img[@alt='Edit']"));
+    }
+
+    private void submitEditedContact() {
+        click(By.name("update"));
     }
 }

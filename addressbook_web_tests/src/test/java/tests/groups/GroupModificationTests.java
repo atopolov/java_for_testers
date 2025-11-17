@@ -10,7 +10,7 @@ public class GroupModificationTests extends TestBase {
     @DisplayName("Модификация группы")
     @Test
     public void CanModificationGroup() {
-        if (!app.groups().isGroupPresent()) {
+        if (app.groups().getGroupCount() == 0) {
         app.groups().createGroup(new GroupData("new group name", "new group header", "new group footer"));
         }
 
