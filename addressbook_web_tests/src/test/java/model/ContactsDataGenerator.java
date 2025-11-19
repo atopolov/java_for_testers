@@ -27,7 +27,7 @@ public class ContactsDataGenerator {
     }
 
     public static ContactsData randomContactsData() {
-        return new ContactsData(randomFirstName(), randomLastName(), randomAddress(), randomHomePhone(), randomEmail());
+        return new ContactsData("", randomFirstName(), randomLastName(), randomAddress(), randomHomePhone(), randomEmail());
     }
 
 }

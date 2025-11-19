@@ -1,10 +1,10 @@
 package tests.groups;
 
-import model.GroupData;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tests.TestBase;
-import static model.GroupDataGenerator.*;
+
+import static model.GroupDataGenerator.randomGroup;
 
 public class GroupModificationTests extends TestBase {
 
@@ -12,11 +12,8 @@ public class GroupModificationTests extends TestBase {
     @Test
     public void CanModificationGroup() {
         if (app.groups().getGroupCount() == 0) {
-        app.groups().createGroup(randomGroup());
+            app.groups().createGroup(randomGroup());
         }
-
         app.groups().modifyGroup(randomGroup());
     }
-
-
 }

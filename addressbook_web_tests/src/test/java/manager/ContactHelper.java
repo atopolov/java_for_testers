@@ -3,6 +3,9 @@ package manager;
 import model.ContactsData;
 import org.openqa.selenium.By;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ContactHelper extends HelperBase {
 
     public ContactHelper(ApplicationManager manager) {
@@ -16,8 +19,8 @@ public class ContactHelper extends HelperBase {
         returnToHomePage();
     }
 
-    public void removeContact() {
-        selectContact();
+    public void removeContact(ContactsData contact) {
+        selectContact(contact);
         deleteContacts();
         returnToHomePage();
     }
@@ -51,8 +54,8 @@ public class ContactHelper extends HelperBase {
         click(By.name("delete"));
     }
 
-    private void selectContact() {
-        click(By.name("selected[]"));
+    private void selectContact(ContactsData contact) {
+        click(By.cssSelector("input[name='selected[]'][value='" + contact.id() + "']"));
     }
 
     public int getContactCount() {
@@ -86,4 +89,25 @@ public class ContactHelper extends HelperBase {
             checkbox.click();
         }
     }
+
+    public List<ContactsData> getContactList() {
+        var contactList = new ArrayList<ContactsData>();
+
+        var checkboxes = manager.driver.findElements(By.name("selected[]"));
+
+        for (var checkbox : checkboxes) {
+            String id = checkbox.getAttribute("value");
+            var row = checkbox.findElement(By.xpath("./ancestor::tr"));
+            String lastName = row.findElement(By.xpath(".//td[2]")).getText();
+            String firstName = row.findElement(By.xpath(".//td[3]")).getText();
+
+            contactList.add(new ContactsData()
+                    .withId(id)
+                    .withName(firstName)
+                    .withLastName(lastName));
+        }
+
+        return contactList;
+    }
 }
+

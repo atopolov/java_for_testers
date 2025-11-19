@@ -1,10 +1,13 @@
 package tests.groups;
 
-import static model.GroupDataGenerator.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tests.TestBase;
 
+import java.util.ArrayList;
+import java.util.Random;
+
+import static model.GroupDataGenerator.randomGroup;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GroupDeletionTests extends TestBase {
@@ -15,10 +18,15 @@ public class GroupDeletionTests extends TestBase {
         if (app.groups().getGroupCount() == 0) {
             app.groups().createGroup(randomGroup());
         }
-        int groupCount = app.groups().getGroupCount();
-        app.groups().removeGroup();
-        int newGroupCount = app.groups().getGroupCount();
-        assertEquals(groupCount - 1, newGroupCount);
+
+        var oldGroups = app.groups().getGroupList();
+        var rnd = new Random();
+        var index = rnd.nextInt(oldGroups.size());
+        app.groups().removeGroup(oldGroups.get(index));
+        var newGroups = app.groups().getGroupList();
+        var expectedList = new ArrayList<>(oldGroups);
+        expectedList.remove(index);
+        assertEquals(newGroups, expectedList);
     }
 
     @DisplayName("Удаление всех групп")

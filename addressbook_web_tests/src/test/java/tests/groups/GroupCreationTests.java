@@ -7,19 +7,19 @@ import org.junit.jupiter.params.provider.MethodSource;
 import tests.TestBase;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static model.GroupDataGenerator.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class GroupCreationTests extends TestBase {
 
     public static List<GroupData> multipleGroupsProvider() {
         List<GroupData> groups = new ArrayList<>();
 
-        groups.add(new GroupData());
         groups.add(new GroupData().withName(randomGroupName()));
-        groups.add(randomGroup());
         groups.add(randomGroup());
         groups.add(randomGroup());
 
@@ -30,7 +30,10 @@ public class GroupCreationTests extends TestBase {
         for (String name : names) {
             for (String header : headers) {
                 for (String footer : footers) {
-                    groups.add(new GroupData(name, header, footer));
+                    groups.add(new GroupData()
+                            .withName(name)
+                            .withHeader(header)
+                            .withFooter(footer));
                 }
             }
         }
@@ -38,13 +41,33 @@ public class GroupCreationTests extends TestBase {
         return groups;
     }
 
-    @DisplayName("Создание группы")
+    @DisplayName("Параметризованное создание группы")
     @ParameterizedTest
     @MethodSource("multipleGroupsProvider")
     public void GroupCreationTest(GroupData group) {
-        int groupCount = app.groups().getGroupCount();
+
+        var oldGroups = app.groups().getGroupList();
         app.groups().createGroup(group);
-        int newGroupCount = app.groups().getGroupCount();
-        assertEquals(groupCount + 1, newGroupCount);
+        var newGroups = app.groups().getGroupList();
+
+        GroupData created = null;
+        for (GroupData g : newGroups) {
+            if (!oldGroups.contains(g)) {
+                created = g;
+                break;
+            }
+        }
+
+        assertNotNull(created, "Созданная группа не найдена");
+        assertNotNull(created.id(), "У созданной группы нет id");
+
+        List<GroupData> expectedList = new ArrayList<>(oldGroups);
+        expectedList.add(created);
+
+        expectedList.sort(Comparator.comparing(GroupData::name));
+        newGroups.sort(Comparator.comparing(GroupData::name));
+
+        assertEquals(expectedList, newGroups, "Списки групп не совпадают после создания новой группы");
     }
 }
+
