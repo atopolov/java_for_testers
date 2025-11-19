@@ -55,15 +55,18 @@ public class ContactHelper extends HelperBase {
     }
 
     private void selectContact(ContactsData contact) {
-        click(By.cssSelector("input[name='selected[]'][value='" + contact.id() + "']"));
+        var row = manager.driver.findElement(
+                        By.cssSelector("input[name='selected[]'][value='" + contact.id() + "']"))
+                .findElement(By.xpath("./ancestor::tr"));
+        row.findElement(By.xpath(".//img[@alt='Edit']")).click();
     }
 
     public int getContactCount() {
         return manager.driver.findElements(By.name("selected[]")).size();
     }
 
-    public void modifyContact(ContactsData modifiedContact) {
-        openContactPage();
+    public void modifyContact(ContactsData contact, ContactsData modifiedContact) {
+        selectContact(contact);
         fillContactsForm(modifiedContact);
         submitEditedContact();
         returnToHomePage();

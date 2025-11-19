@@ -1,10 +1,17 @@
 package tests.contacts;
 
+import model.ContactsData;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tests.TestBase;
 
-import static model.ContactsDataGenerator.randomContactsData;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Random;
+
+import static model.ContactsDataGenerator.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ContactModificationTests extends TestBase {
     @DisplayName("Изменение контакта")
@@ -13,6 +20,27 @@ public class ContactModificationTests extends TestBase {
         if (app.contacts().getContactCount() == 0) {
             app.contacts().createContact(randomContactsData());
         }
-        app.contacts().modifyContact(randomContactsData());
+
+        List<ContactsData> oldContacts = app.contacts().getContactList();
+        Random rnd = new Random();
+        int index = rnd.nextInt(oldContacts.size());
+
+        ContactsData originalContact = oldContacts.get(index);
+        ContactsData modifiedContact = new ContactsData()
+                .withId(originalContact.id())
+                .withName(randomFirstName())
+                .withLastName(randomLastName());
+
+        app.contacts().modifyContact(originalContact, modifiedContact);
+
+        var newContacts = app.contacts().getContactList();
+
+        var expectedList = new ArrayList<>(oldContacts);
+        expectedList.set(index, modifiedContact);
+
+        expectedList.sort(Comparator.comparing(ContactsData::id));
+        newContacts.sort(Comparator.comparing(ContactsData::id));
+
+        assertEquals(expectedList, newContacts, "Списки контактов не совпадают после модификации");
     }
 }
