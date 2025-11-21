@@ -1,6 +1,12 @@
 package model;
 
-public record ContactsData(String id, String firstname, String lastname, String address, String phone, String email
+public record ContactsData(
+        String id,
+        String firstname,
+        String lastname,
+        String address,
+        String phone,
+        String email
 ) {
 
     public ContactsData() {
@@ -27,7 +33,7 @@ public record ContactsData(String id, String firstname, String lastname, String 
         return new ContactsData(this.id, this.firstname, this.lastname, address, this.phone, this.email);
     }
 
-    public ContactsData withPhone(String home) {
-        return new ContactsData(this.id, this.firstname, this.lastname, this.address, phone, this.email);
+    public ContactsData withPhone(String phone) {
+        return new ContactsData(this.id, this.firstname, this.lastname, this.address, this.phone, this.email);
     }
 }

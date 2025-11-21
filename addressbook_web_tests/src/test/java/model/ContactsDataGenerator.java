@@ -6,6 +6,9 @@ public class ContactsDataGenerator {
 
     private static final Faker faker = new Faker();
 
+    private ContactsDataGenerator() {
+    }
+
     public static String randomFirstName() {
         return faker.name().firstName();
     }
@@ -27,7 +30,14 @@ public class ContactsDataGenerator {
     }
 
     public static ContactsData randomContactsData() {
-        return new ContactsData("", randomFirstName(), randomLastName(), randomAddress(), randomHomePhone(), randomEmail());
+        return new ContactsData(
+                "",
+                randomFirstName(),
+                randomLastName(),
+                randomAddress(),
+                randomHomePhone(),
+                randomEmail()
+        );
     }
 
 }

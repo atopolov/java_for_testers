@@ -8,109 +8,108 @@ import java.util.List;
 
 public class ContactHelper extends HelperBase {
 
+    private final By contactRows = By.xpath("//tr[@name='entry']");
+    private final By contactCheckbox = By.name("selected[]");
+    private final By newContactBtn = By.cssSelector("a[href='edit.php']");
+    private final By deleteBtn = By.name("delete");
+    private final By updateBtn = By.name("update");
+    private final By submitBtn = By.xpath("(//input[@name='submit'])[2]");
+
     public ContactHelper(ApplicationManager manager) {
         super(manager);
     }
 
-    public void createContact(ContactsData contacts) {
+    public void createContact(ContactsData contact) {
         openNewContactPage();
-        fillContactsForm(contacts);
+        fillContactsForm(contact);
         submitNewContact();
         returnToHomePage();
     }
 
-    public void removeContact(ContactsData contact) {
-        selectContact(contact);
-        deleteContacts();
+    public void modifyContact(ContactsData contact, ContactsData modifiedContact) {
+        openContactEditPage(contact.id());
+        fillContactsForm(modifiedContact);
+        submitEditedContact();
         returnToHomePage();
     }
 
-    private void submitNewContact() {
-        click(By.xpath("(//input[@name=\'submit\'])[2]"));
+    public void removeContact(ContactsData contact) {
+        selectContact(contact.id());
+        deleteSelectedContacts();
+        returnToHomePage();
+    }
+
+    public void removeAllContacts() {
+        selectAllContacts();
+        deleteSelectedContacts();
+        returnToHomePage();
+    }
+
+    public int getContactCount() {
+        return manager.driver.findElements(contactCheckbox).size();
+    }
+
+    public List<ContactsData> getContactList() {
+        var contacts = new ArrayList<ContactsData>();
+        var rows = manager.driver.findElements(contactRows);
+
+        for (var row : rows) {
+            String id = row.findElement(contactCheckbox).getAttribute("value");
+            String lastName = row.findElement(By.xpath("./td[2]")).getText();
+            String firstName = row.findElement(By.xpath("./td[3]")).getText();
+
+            contacts.add(
+                    new ContactsData()
+                            .withId(id)
+                            .withName(firstName)
+                            .withLastName(lastName)
+            );
+        }
+
+        return contacts;
     }
 
     private void openNewContactPage() {
-        click(By.linkText("add new"));
-    }
-
-    private void fillContactsForm(ContactsData contacts) {
-        click(By.name("firstname"));
-        type(By.name("firstname"), contacts.firstname());
-        click(By.name("lastname"));
-        type(By.name("lastname"), contacts.lastname());
-        click(By.name("address"));
-        type(By.name("address"), contacts.address());
-        click(By.name("home"));
-        type(By.name("home"), contacts.phone());
-        click(By.name("email"));
-        type(By.name("email"), contacts.email());
+        click(newContactBtn);
     }
 
     private void returnToHomePage() {
         click(By.linkText("home page"));
     }
 
-    private void deleteContacts() {
-        click(By.name("delete"));
+    private void openContactEditPage(String contactId) {
+        click(By.xpath("//tr[.//input[@name='selected[]' and @value='"
+                + contactId + "']]//img[@alt='Edit']"));
     }
 
-    private void selectContact(ContactsData contact) {
-        var row = manager.driver.findElement(
-                        By.cssSelector("input[name='selected[]'][value='" + contact.id() + "']"))
-                .findElement(By.xpath("./ancestor::tr"));
-        row.findElement(By.xpath(".//img[@alt='Edit']")).click();
-    }
-
-    public int getContactCount() {
-        return manager.driver.findElements(By.name("selected[]")).size();
-    }
-
-    public void modifyContact(ContactsData contact, ContactsData modifiedContact) {
-        selectContact(contact);
-        fillContactsForm(modifiedContact);
-        submitEditedContact();
-        returnToHomePage();
-    }
-
-    private void openContactPage() {
-        click(By.xpath("//img[@alt='Edit']"));
+    private void submitNewContact() {
+        click(submitBtn);
     }
 
     private void submitEditedContact() {
-        click(By.name("update"));
+        click(updateBtn);
     }
 
-    public void removeAllContacts() {
-        selectAllContacts();
-        deleteContacts();
-        returnToHomePage();
+    private void deleteSelectedContacts() {
+        click(deleteBtn);
+    }
+
+    private void selectContact(String contactId) {
+        click(By.cssSelector("input[name='selected[]'][value='" + contactId + "']"));
     }
 
     private void selectAllContacts() {
-        var checkboxes = manager.driver.findElements(By.name("selected[]"));
+        var checkboxes = manager.driver.findElements(contactCheckbox);
         for (var checkbox : checkboxes) {
             checkbox.click();
         }
     }
 
-    public List<ContactsData> getContactList() {
-        var contactList = new ArrayList<ContactsData>();
-
-        var checkboxes = manager.driver.findElements(By.name("selected[]"));
-
-        for (var checkbox : checkboxes) {
-            String id = checkbox.getAttribute("value");
-            var row = checkbox.findElement(By.xpath("./ancestor::tr"));
-            String lastName = row.findElement(By.xpath(".//td[2]")).getText();
-            String firstName = row.findElement(By.xpath(".//td[3]")).getText();
-
-            contactList.add(new ContactsData()
-                    .withId(id)
-                    .withName(firstName)
-                    .withLastName(lastName));
-        }
-
-        return contactList;
+    private void fillContactsForm(ContactsData data) {
+        type(By.name("firstname"), data.firstname());
+        type(By.name("lastname"), data.lastname());
+        type(By.name("address"), data.address());
+        type(By.name("home"), data.phone());
+        type(By.name("email"), data.email());
     }
 }
-

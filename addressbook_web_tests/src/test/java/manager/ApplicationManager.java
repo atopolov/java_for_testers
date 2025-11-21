@@ -1,9 +1,6 @@
 package manager;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
@@ -11,52 +8,71 @@ import java.time.Duration;
 
 public class ApplicationManager {
 
-    public static final String URL = "http://localhost/addressbook/";
-    public static final Dimension DIMENSION = new Dimension(1650, 818);
-    public static final int SECONDS = 5;
+    private static final String BASE_URL = "http://localhost/addressbook/";
+    private static final Dimension WINDOW_SIZE = new Dimension(1650, 818);
+    private static final int IMPLICIT_WAIT_SECONDS = 5;
 
     protected WebDriver driver;
-    private LoginHelper session;
-    private GroupHelper groups;
-    private ContactHelper contacts;
+    private LoginHelper loginHelper;
+    private GroupHelper groupHelper;
+    private ContactHelper contactHelper;
 
     public void init(String browser) {
-        if (driver == null) {
-            if ("firefox".equals(browser)) {
-                driver = new FirefoxDriver();
-            } else if ("chrome".equals(browser)) {
-                driver = new ChromeDriver();
-            } else {
-                throw new IllegalArgumentException(String.format("Введено неподдерживаемое значение браузера: %s", browser));
-            }
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> driver.quit()));
-
-            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(SECONDS));
-            driver.manage().window().setSize(DIMENSION);
-            driver.get(URL);
-            session().login("admin", "secret");
+        if (driver != null) {
+            return;
         }
+
+        driver = createDriver(browser);
+        registerShutdownHook();
+
+        configureDriver();
+        driver.get(BASE_URL);
+
+        session().login("admin", "secret");
+    }
+
+    private WebDriver createDriver(String browser) {
+        return switch (browser.toLowerCase()) {
+            case "firefox" -> new FirefoxDriver();
+            case "chrome" -> new ChromeDriver();
+            default -> throw new IllegalArgumentException(
+                    String.format("Unsupported browser: %s", browser)
+            );
+        };
+    }
+
+    private void configureDriver() {
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_SECONDS));
+        driver.manage().window().setSize(WINDOW_SIZE);
+    }
+
+    private void registerShutdownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                if (driver != null) driver.quit();
+            } catch (Exception ignored) {}
+        }));
     }
 
     public LoginHelper session() {
-        if (session == null) {
-            session = new LoginHelper(this);
+        if (loginHelper == null) {
+            loginHelper = new LoginHelper(this);
         }
-        return session;
+        return loginHelper;
     }
 
     public GroupHelper groups() {
-        if (groups == null) {
-            groups = new GroupHelper(this);
+        if (groupHelper == null) {
+            groupHelper = new GroupHelper(this);
         }
-        return groups;
+        return groupHelper;
     }
 
     public ContactHelper contacts() {
-        if (contacts == null) {
-            contacts = new ContactHelper(this);
+        if (contactHelper == null) {
+            contactHelper = new ContactHelper(this);
         }
-        return contacts;
+        return contactHelper;
     }
 
     public boolean isElementPresent(By locator) {
@@ -67,5 +83,4 @@ public class ApplicationManager {
             return false;
         }
     }
-
 }

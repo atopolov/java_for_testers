@@ -21,6 +21,4 @@ public record GroupData(String id, String name, String header, String footer) {
     public GroupData withFooter(String footer) {
         return new GroupData(this.id, this.name, this.header, footer);
     }
-
-
 }

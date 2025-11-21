@@ -11,11 +11,11 @@ public class GroupDataGenerator {
     }
 
     public static String randomGroupHeader() {
-        return faker.lorem().word();
+        return faker.lorem().sentence();
     }
 
     public static String randomGroupFooter() {
-        return faker.lorem().word();
+        return faker.lorem().sentence();
     }
 
     public static GroupData randomGroup() {

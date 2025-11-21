@@ -8,13 +8,20 @@ import java.util.List;
 
 public class GroupHelper extends HelperBase {
 
+    private final By groupCheckboxes = By.name("selected[]");
+    private final By createGroupButton = By.name("new");
+    private final By editGroupButton = By.name("edit");
+    private final By deleteGroupButton = By.name("delete");
+    private final By updateGroupButton = By.name("update");
+    private final By submitGroupButton = By.name("submit");
+
     public GroupHelper(ApplicationManager manager) {
         super(manager);
     }
 
     public void createGroup(GroupData group) {
         openGroupsPage();
-        initGroupCreation();
+        startGroupCreation();
         fillGroupForm(group);
         submitGroupCreation();
         returnToGroupsPage();
@@ -22,8 +29,8 @@ public class GroupHelper extends HelperBase {
 
     public void modifyGroup(GroupData group, GroupData modifiedGroup) {
         openGroupsPage();
-        selectGroup(group);
-        initGroupModification();
+        selectGroup(group.id());
+        startGroupModification();
         fillGroupForm(modifiedGroup);
         submitGroupModification();
         returnToGroupsPage();
@@ -31,85 +38,80 @@ public class GroupHelper extends HelperBase {
 
     public void removeGroup(GroupData group) {
         openGroupsPage();
-        selectGroup(group);
-        removeSelectedGroups();
+        selectGroup(group.id());
+        deleteSelectedGroups();
         returnToGroupsPage();
     }
 
-    private void removeSelectedGroups() {
-        click(By.name("delete"));
+    public void removeAllGroups() {
+        openGroupsPage();
+        selectAllGroups();
+        deleteSelectedGroups();
+        returnToGroupsPage();
+    }
+
+    public int getGroupCount() {
+        openGroupsPage();
+        return manager.driver.findElements(By.cssSelector("span.group")).size();
+    }
+
+    public List<GroupData> getGroupList() {
+        openGroupsPage();
+        var groupElements = manager.driver.findElements(By.cssSelector("span.group"));
+        var groups = new ArrayList<GroupData>();
+
+        for (var element : groupElements) {
+            String name = element.getText();
+            String id = element.findElement(groupCheckboxes).getAttribute("value");
+            groups.add(new GroupData().withId(id).withName(name));
+        }
+
+        return groups;
     }
 
     public void openGroupsPage() {
-        if (!manager.isElementPresent(By.name("new"))) {
+        if (!manager.isElementPresent(createGroupButton)) {
             click(By.linkText("groups"));
         }
     }
 
-    private void submitGroupCreation() {
-        click(By.name("submit"));
-    }
-
-    private void initGroupCreation() {
-        click(By.name("new"));
-    }
-
-
     private void returnToGroupsPage() {
         click(By.linkText("group page"));
+    }
 
+    private void startGroupCreation() {
+        click(createGroupButton);
+    }
+
+    private void submitGroupCreation() {
+        click(submitGroupButton);
+    }
+
+    private void startGroupModification() {
+        click(editGroupButton);
     }
 
     private void submitGroupModification() {
-        click(By.name("update"));
+        click(updateGroupButton);
+    }
 
+    private void deleteSelectedGroups() {
+        click(deleteGroupButton);
+    }
+
+    private void selectGroup(String groupId) {
+        click(By.cssSelector("input[name='selected[]'][value='" + groupId + "']"));
+    }
+
+    private void selectAllGroups() {
+        for (var checkbox : manager.driver.findElements(groupCheckboxes)) {
+            checkbox.click();
+        }
     }
 
     private void fillGroupForm(GroupData group) {
         type(By.name("group_name"), group.name());
         type(By.name("group_header"), group.header());
         type(By.name("group_footer"), group.footer());
-
-    }
-
-    private void initGroupModification() {
-        click(By.name("edit"));
-
-    }
-
-    private void selectGroup(GroupData group) {
-        click(By.cssSelector(String.format("input[value='%s']", group.id())));
-    }
-
-    public int getGroupCount() {
-        openGroupsPage();
-        return manager.driver.findElements(By.name("selected[]")).size();
-    }
-
-    public void removeAllGroups() {
-        openGroupsPage();
-        selectAllGroups();
-        removeSelectedGroups();
-
-    }
-
-    private void selectAllGroups() {
-        var checkboxes = manager.driver.findElements(By.name("selected[]"));
-        for (var checkbox : checkboxes) {
-            checkbox.click();
-        }
-    }
-
-
-    public List<GroupData> getGroupList() {
-        var groupList = new ArrayList<GroupData>();
-        var spans = manager.driver.findElements(By.cssSelector("span.group"));
-        for (var span : spans) {
-            var name = span.getText();
-            var checkbox = span.findElement(By.name("selected[]"));
-            groupList.add(new GroupData().withId(checkbox.getAttribute("value")).withName(name));
-        }
-        return groupList;
-
     }
 }

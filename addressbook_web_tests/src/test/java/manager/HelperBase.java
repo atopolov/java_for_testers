@@ -8,23 +8,33 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class HelperBase {
+
     protected final ApplicationManager manager;
+    private final Duration TIMEOUT = Duration.ofSeconds(5);
 
     public HelperBase(ApplicationManager manager) {
         this.manager = manager;
     }
 
     protected void click(By locator) {
-        WebDriverWait wait = new WebDriverWait(manager.driver, Duration.ofSeconds(5));
-        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
-        manager.driver.findElement(locator).click();
+        WebElement element = waitForClickable(locator);
+        element.click();
     }
 
     protected void type(By locator, String text) {
-        WebDriverWait wait = new WebDriverWait(manager.driver, Duration.ofSeconds(5));
-        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-        click(locator);
-        manager.driver.findElement(locator).clear();
-        manager.driver.findElement(locator).sendKeys(text);
+        WebElement element = waitForVisible(locator);
+        element.clear();
+        element.sendKeys(text);
+    }
+
+    private WebElement waitForClickable(By locator) {
+        return new WebDriverWait(manager.driver, TIMEOUT)
+                .until(ExpectedConditions.elementToBeClickable(locator));
+    }
+
+    private WebElement waitForVisible(By locator) {
+        return new WebDriverWait(manager.driver, TIMEOUT)
+                .until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 }
+
