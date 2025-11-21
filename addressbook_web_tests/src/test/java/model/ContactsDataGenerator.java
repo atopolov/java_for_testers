@@ -1,6 +1,9 @@
 package model;
 
 import com.github.javafaker.Faker;
+import java.io.File;
+
+import java.util.Random;
 
 public class ContactsDataGenerator {
 
@@ -29,6 +32,12 @@ public class ContactsDataGenerator {
         return faker.internet().emailAddress();
     }
 
+    public static String randomPhoto() {
+        File[] files = new File("src/test/resources/images").listFiles();
+
+        return files[new Random().nextInt(files.length)].getAbsolutePath();
+    }
+
     public static ContactsData randomContactsData() {
         return new ContactsData(
                 "",
@@ -36,7 +45,8 @@ public class ContactsDataGenerator {
                 randomLastName(),
                 randomAddress(),
                 randomHomePhone(),
-                randomEmail()
+                randomEmail(),
+                randomPhoto()
         );
     }
 

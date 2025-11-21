@@ -19,7 +19,7 @@ public class ContactCreationTests extends TestBase {
     public static List<ContactsData> multipleContactsProvider() {
         List<ContactsData> contacts = new ArrayList<>();
 
-        contacts.add(new ContactsData().withName(randomFirstName()).withLastName(randomLastName()));
+        contacts.add(new ContactsData().withName(randomFirstName()).withLastName(randomLastName()).withPhoto(randomPhoto()));
         contacts.add(randomContactsData());
         contacts.add(randomContactsData());
 

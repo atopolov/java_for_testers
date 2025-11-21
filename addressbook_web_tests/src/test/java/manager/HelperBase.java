@@ -5,6 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.nio.file.Paths;
 import java.time.Duration;
 
 public class HelperBase {
@@ -25,6 +26,11 @@ public class HelperBase {
         WebElement element = waitForVisible(locator);
         element.clear();
         element.sendKeys(text);
+    }
+
+    protected void attach(By locator, String file) {
+        WebElement element = waitForVisible(locator);
+        element.sendKeys(Paths.get(file).toAbsolutePath().toString());
     }
 
     private WebElement waitForClickable(By locator) {

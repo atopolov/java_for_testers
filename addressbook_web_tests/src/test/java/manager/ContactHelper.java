@@ -110,6 +110,6 @@ public class ContactHelper extends HelperBase {
         type(By.name("lastname"), data.lastname());
         type(By.name("address"), data.address());
         type(By.name("home"), data.phone());
-        type(By.name("email"), data.email());
+        attach(By.name("photo"), data.photo());
     }
 }
