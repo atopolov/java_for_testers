@@ -5,10 +5,10 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import java.time.Duration;
+import java.util.Properties;
 
 public class ApplicationManager {
 
-    private static final String BASE_URL = "http://localhost/addressbook/";
     private static final Dimension WINDOW_SIZE = new Dimension(1650, 818);
     private static final int IMPLICIT_WAIT_SECONDS = 5;
 
@@ -16,8 +16,12 @@ public class ApplicationManager {
     private LoginHelper loginHelper;
     private GroupHelper groupHelper;
     private ContactHelper contactHelper;
+    private Properties properties;
 
-    public void init(String browser) {
+    public void init(String browser, Properties properties) {
+        this.properties = properties;
+
+
         if (driver != null) {
             return;
         }
@@ -26,9 +30,9 @@ public class ApplicationManager {
         registerShutdownHook();
 
         configureDriver();
-        driver.get(BASE_URL);
+        driver.get(properties.getProperty("web.baseUrl"));
 
-        session().login("admin", "secret");
+        session().login(properties.getProperty("web.username"), properties.getProperty("web.password"));
     }
 
     private WebDriver createDriver(String browser) {
