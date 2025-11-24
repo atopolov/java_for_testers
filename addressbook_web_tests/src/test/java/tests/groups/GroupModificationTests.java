@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
 
-import static model.GroupDataGenerator.randomGroup;
+import static model.GroupDataGenerator.randomGroupData;
 import static model.GroupDataGenerator.randomGroupName;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -19,7 +19,7 @@ public class GroupModificationTests extends TestBase {
     @Test
     public void CanModificationGroup() {
         if (app.groups().getGroupCount() == 0) {
-            app.groups().createGroup(randomGroup());
+            app.groups().createGroup(randomGroupData());
         }
 
         var oldGroups = app.groups().getGroupList();

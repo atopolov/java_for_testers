@@ -7,7 +7,7 @@ import tests.TestBase;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static model.GroupDataGenerator.randomGroup;
+import static model.GroupDataGenerator.randomGroupData;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GroupDeletionTests extends TestBase {
@@ -16,7 +16,7 @@ public class GroupDeletionTests extends TestBase {
     @Test
     public void GroupDeletionTest() {
         if (app.groups().getGroupCount() == 0) {
-            app.groups().createGroup(randomGroup());
+            app.groups().createGroup(randomGroupData());
         }
 
         var oldGroups = app.groups().getGroupList();
@@ -33,7 +33,7 @@ public class GroupDeletionTests extends TestBase {
     @Test
     public void GroupDeletionAllTest() {
         if (app.groups().getGroupCount() == 0) {
-            app.groups().createGroup(randomGroup());
+            app.groups().createGroup(randomGroupData());
         }
         app.groups().removeAllGroups();
         assertEquals(0, app.groups().getGroupCount());

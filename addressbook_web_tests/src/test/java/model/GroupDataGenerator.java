@@ -18,7 +18,7 @@ public class GroupDataGenerator {
         return faker.lorem().sentence();
     }
 
-    public static GroupData randomGroup() {
+    public static GroupData randomGroupData() {
         return new GroupData()
                 .withName(randomGroupName())
                 .withHeader(randomGroupHeader())

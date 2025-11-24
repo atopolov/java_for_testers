@@ -1,0 +1,47 @@
+<ArrayList>
+  <item>
+    <id></id>
+    <firstname>Adolph</firstname>
+    <lastname>Ritchie</lastname>
+    <address>76199 Paucek Squares, Port Timothyshire, VA 74998-9669</address>
+    <phone>360.406.6890</phone>
+    <email>alyse.moore@hotmail.com</email>
+    <photo>C:\Users\topolov.a\Desktop\homework\java_for_testers\addressbook_web_tests\src\test\resources\images\avatar3.png</photo>
+  </item>
+  <item>
+    <id></id>
+    <firstname>Donnie</firstname>
+    <lastname>Olson</lastname>
+    <address>Apt. 977 0040 Mariana Cliffs, South Roland, AK 14468-8899</address>
+    <phone>1-112-150-4876</phone>
+    <email>rana.mills@yahoo.com</email>
+    <photo>C:\Users\topolov.a\Desktop\homework\java_for_testers\addressbook_web_tests\src\test\resources\images\avatar5.png</photo>
+  </item>
+  <item>
+    <id></id>
+    <firstname>Delisa</firstname>
+    <lastname>Rogahn</lastname>
+    <address>Apt. 500 83593 Koch Port, Lake Zacharyport, NY 09895</address>
+    <phone>716.319.1306</phone>
+    <email>francis.mayert@hotmail.com</email>
+    <photo>C:\Users\topolov.a\Desktop\homework\java_for_testers\addressbook_web_tests\src\test\resources\images\avatar5.png</photo>
+  </item>
+  <item>
+    <id></id>
+    <firstname>Cassondra</firstname>
+    <lastname>Walter</lastname>
+    <address>03704 Wesley Road, North Nellburgh, GA 62500-8467</address>
+    <phone>054-543-5343</phone>
+    <email>yuette.beahan@gmail.com</email>
+    <photo>C:\Users\topolov.a\Desktop\homework\java_for_testers\addressbook_web_tests\src\test\resources\images\avatar3.png</photo>
+  </item>
+  <item>
+    <id></id>
+    <firstname>Ashly</firstname>
+    <lastname>Buckridge</lastname>
+    <address>Apt. 722 17495 Trudie Crossing, Lorileeborough, RI 47431</address>
+    <phone>1-442-547-2757</phone>
+    <email>suzette.okon@gmail.com</email>
+    <photo>C:\Users\topolov.a\Desktop\homework\java_for_testers\addressbook_web_tests\src\test\resources\images\avatar4.png</photo>
+  </item>
+</ArrayList>

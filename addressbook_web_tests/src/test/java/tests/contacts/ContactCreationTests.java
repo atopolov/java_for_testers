@@ -1,29 +1,50 @@
 package tests.contacts;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import model.ContactsData;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import tests.TestBase;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static model.ContactsDataGenerator.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ContactCreationTests extends TestBase {
 
-    public static List<ContactsData> multipleContactsProvider() {
-        List<ContactsData> contacts = new ArrayList<>();
+    public static final String CONTACTS_XML = "contacts.xml";
 
-        contacts.add(new ContactsData().withName(randomFirstName()).withLastName(randomLastName()).withPhoto(randomPhoto()));
-        contacts.add(randomContactsData());
-        contacts.add(randomContactsData());
+    public static List<ContactsData> multipleContactsProvider() throws IOException {
+        String filePath = System.getProperty("contacts.file", CONTACTS_XML);
+        File file = new File(filePath);
 
-        return contacts;
+        if (!file.exists()) {
+            throw new IllegalArgumentException("Файл с контактами не найден: " + file.getAbsolutePath());
+        }
+
+        ObjectMapper mapper;
+        String fileName = file.getName().toLowerCase();
+        if (fileName.endsWith(".yaml") || fileName.endsWith(".yml")) {
+            mapper = new ObjectMapper(new YAMLFactory());
+        } else if (fileName.endsWith(".xml")) {
+            mapper = new XmlMapper();
+        } else if (fileName.endsWith(".json")) {
+            mapper = new ObjectMapper();
+        } else {
+            throw new IllegalArgumentException("Неподдерживаемый формат файла: " + CONTACTS_XML);
+        }
+
+        return mapper.readValue(file, new TypeReference<List<ContactsData>>() {
+        });
     }
 
     @DisplayName("Параметризованное создание контактов")
@@ -59,3 +80,4 @@ public class ContactCreationTests extends TestBase {
         assertEquals(expectedList, newContacts, "Списки контактов не совпадают после создания нового контакта");
     }
 }
+
