@@ -26,10 +26,22 @@ public class ContactModificationTests extends TestBase {
         int index = rnd.nextInt(oldContacts.size());
 
         ContactsData originalContact = oldContacts.get(index);
-        ContactsData modifiedContact = new ContactsData()
-                .withId(originalContact.id())
-                .withName(randomFirstName())
-                .withLastName(randomLastName());
+        ContactsData modifiedContact = new ContactsData(
+                originalContact.id(),
+                randomFirstName(),
+                randomLastName(),
+                randomAddress(),
+                randomHomePhone(),
+                randomMobilePhone(),
+                randomWorkPhone(),
+                randomEmail(),
+                randomEmail2(),
+                randomEmail3(),
+                randomAddress2(),
+                randomPhone2(),
+                randomNotes(),
+                randomPhoto()
+        );
 
         app.contacts().modifyContact(originalContact, modifiedContact);
 

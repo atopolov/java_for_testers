@@ -15,15 +15,15 @@ public class GroupDeletionTests extends TestBase {
     @DisplayName("Удаление группы")
     @Test
     public void GroupDeletionTest() {
-        if (app.groups().getGroupCount() == 0) {
-            app.groups().createGroup(randomGroupData());
+        if (app.hbm().getGroupCount() == 0) {
+            app.hbm().createGroup(randomGroupData());
         }
 
-        var oldGroups = app.groups().getGroupList();
+        var oldGroups = app.hbm().getGroupList();
         var rnd = new Random();
         var index = rnd.nextInt(oldGroups.size());
         app.groups().removeGroup(oldGroups.get(index));
-        var newGroups = app.groups().getGroupList();
+        var newGroups = app.hbm().getGroupList();
         var expectedList = new ArrayList<>(oldGroups);
         expectedList.remove(index);
         assertEquals(newGroups, expectedList);
@@ -32,11 +32,11 @@ public class GroupDeletionTests extends TestBase {
     @DisplayName("Удаление всех групп")
     @Test
     public void GroupDeletionAllTest() {
-        if (app.groups().getGroupCount() == 0) {
-            app.groups().createGroup(randomGroupData());
+        if (app.hbm().getGroupCount() == 0) {
+            app.hbm().createGroup(randomGroupData());
         }
         app.groups().removeAllGroups();
-        assertEquals(0, app.groups().getGroupCount());
+        assertEquals(0, app.hbm().getGroupCount());
     }
 
 }

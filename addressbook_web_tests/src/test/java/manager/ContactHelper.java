@@ -59,10 +59,22 @@ public class ContactHelper extends HelperBase {
             String firstName = row.findElement(By.xpath("./td[3]")).getText();
 
             contacts.add(
-                    new ContactsData()
-                            .withId(id)
-                            .withName(firstName)
-                            .withLastName(lastName)
+                    new ContactsData(
+                            id,          // String
+                            firstName,   // String
+                            lastName,    // String
+                            null,        // address
+                            null,        // phone
+                            null,        // mobile
+                            null,        // work
+                            null,        // email
+                            null,        // email2
+                            null,        // email3
+                            null,        // address2
+                            null,        // phone2
+                            null,        // notes
+                            null         // photo
+                    )
             );
         }
 

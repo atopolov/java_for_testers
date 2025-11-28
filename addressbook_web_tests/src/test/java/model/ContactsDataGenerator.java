@@ -28,8 +28,36 @@ public class ContactsDataGenerator {
         return faker.phoneNumber().cellPhone();
     }
 
+    public static String randomMobilePhone() {
+        return faker.phoneNumber().cellPhone();
+    }
+
+    public static String randomWorkPhone() {
+        return faker.phoneNumber().phoneNumber();
+    }
+
     public static String randomEmail() {
         return faker.internet().emailAddress();
+    }
+
+    public static String randomEmail2() {
+        return faker.internet().emailAddress();
+    }
+
+    public static String randomEmail3() {
+        return faker.internet().emailAddress();
+    }
+
+    public static String randomAddress2() {
+        return faker.address().secondaryAddress();
+    }
+
+    public static String randomPhone2() {
+        return faker.phoneNumber().phoneNumber();
+    }
+
+    public static String randomNotes() {
+        return faker.lorem().sentence();
     }
 
     public static String randomPhoto() {
@@ -45,7 +73,14 @@ public class ContactsDataGenerator {
                 randomLastName(),
                 randomAddress(),
                 randomHomePhone(),
+                randomMobilePhone(),
+                randomWorkPhone(),
                 randomEmail(),
+                randomEmail2(),
+                randomEmail3(),
+                randomAddress2(),
+                randomPhone2(),
+                randomNotes(),
                 randomPhoto()
         );
     }
