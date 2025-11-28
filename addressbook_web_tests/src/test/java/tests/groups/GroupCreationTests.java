@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import static model.GroupDataGenerator.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -48,14 +49,21 @@ public class GroupCreationTests extends TestBase {
         });
     }
 
+    public static List<GroupData> singleGroupProvider() {
+        return List.of(new GroupData()
+                .withName(randomGroupName())
+                .withHeader(randomGroupHeader())
+                .withFooter(randomGroupFooter()));
+    }
+
     @DisplayName("Параметризованное создание группы")
     @ParameterizedTest
-    @MethodSource("multipleGroupsProvider")
+    @MethodSource("singleGroupProvider")
     public void GroupCreationTest(GroupData group) {
 
-        var oldGroups = app.groups().getGroupList();
+        var oldGroups = app.hbm().getGroupList();
         app.groups().createGroup(group);
-        var newGroups = app.groups().getGroupList();
+        var newGroups = app.hbm().getGroupList();
 
         GroupData created = null;
         for (GroupData g : newGroups) {
@@ -71,10 +79,13 @@ public class GroupCreationTests extends TestBase {
         List<GroupData> expectedList = new ArrayList<>(oldGroups);
         expectedList.add(created);
 
-        expectedList.sort(Comparator.comparing(GroupData::name));
-        newGroups.sort(Comparator.comparing(GroupData::name));
+        expectedList.sort(Comparator.comparing(GroupData::id));
+        newGroups.sort(Comparator.comparing(GroupData::id));
 
         assertEquals(expectedList, newGroups, "Списки групп не совпадают после создания новой группы");
+
+        var newUiGroups = app.hbm().getGroupList();
+        assertEquals(expectedList, newUiGroups, "Списки групп не совпадают после создания новой группы");
     }
 }
 

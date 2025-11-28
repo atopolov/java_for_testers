@@ -1,6 +1,9 @@
 package manager;
 
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
@@ -17,6 +20,8 @@ public class ApplicationManager {
     private GroupHelper groupHelper;
     private ContactHelper contactHelper;
     private Properties properties;
+    private JdbcHelper jdbcHelper;
+    private HibernateHelper hbm;
 
     public void init(String browser, Properties properties) {
         this.properties = properties;
@@ -54,7 +59,8 @@ public class ApplicationManager {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 if (driver != null) driver.quit();
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }));
     }
 
@@ -77,6 +83,20 @@ public class ApplicationManager {
             contactHelper = new ContactHelper(this);
         }
         return contactHelper;
+    }
+
+    public JdbcHelper jdbcHelper() {
+        if (jdbcHelper == null) {
+            jdbcHelper = new JdbcHelper(this);
+        }
+        return jdbcHelper;
+    }
+
+    public HibernateHelper hbm() {
+        if (hbm == null) {
+            hbm = new HibernateHelper(this);
+        }
+        return hbm;
     }
 
     public boolean isElementPresent(By locator) {
