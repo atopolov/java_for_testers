@@ -5,7 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import model.ContactsData;
+import model.ContactsDataGenerator;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import tests.TestBase;
@@ -16,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import static model.GroupDataGenerator.randomGroupData;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -79,5 +83,37 @@ public class ContactCreationTests extends TestBase {
 
         assertEquals(expectedList, newContacts, "Списки контактов не совпадают после создания нового контакта");
     }
+
+    @Test
+    public void canCreateContactInGroup() {
+
+        var contacs = ContactsDataGenerator.randomContactsData();
+
+        if (app.hbm().getGroupCount() == 0) {
+            app.hbm().createGroup(randomGroupData());
+        }
+        var group = app.hbm().getGroupList().get(0);
+
+        var oldRelated = app.hbm().getContactsInGroup(group);
+        app.contacts().createContact(contacs, group);
+        var newRelated = app.hbm().getContactsInGroup(group);
+
+        Assertions.assertEquals(oldRelated.size() + 1, newRelated.size(),
+                "Количество контактов в группе должно увеличиться на 1");
+
+        boolean contactAdded = false;
+        for (var c : newRelated) {
+            if (c.firstname().equals(contacs.firstname()) &&
+                    c.lastname().equals(contacs.lastname()) &&
+                    c.mobile().equals(contacs.mobile())) {
+                contactAdded = true;
+                break;
+            }
+        }
+
+        Assertions.assertTrue(contactAdded,
+                "Новый контакт должен присутствовать в списке контактов выбранной группы");
+    }
 }
+
 
