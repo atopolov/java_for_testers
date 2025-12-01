@@ -23,6 +23,9 @@ public class HelperBase {
     }
 
     protected void type(By locator, String text) {
+        if (text == null) {
+            text = "";
+        }
         WebElement element = waitForVisible(locator);
         element.clear();
         element.sendKeys(text);

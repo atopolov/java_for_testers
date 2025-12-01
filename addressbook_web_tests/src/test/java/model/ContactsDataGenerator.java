@@ -20,6 +20,22 @@ public class ContactsDataGenerator {
         return faker.name().lastName();
     }
 
+    public static String randomMiddleName() {
+        return faker.name().nameWithMiddle();
+    }
+
+    public static String randomNickname() {
+        return faker.name().username();
+    }
+
+    public static String randomTitle() {
+        return faker.name().title();
+    }
+
+    public static String randomCompany() {
+        return faker.company().name();
+    }
+
     public static String randomAddress() {
         return faker.address().fullAddress();
     }
@@ -48,21 +64,20 @@ public class ContactsDataGenerator {
         return faker.internet().emailAddress();
     }
 
-    public static String randomAddress2() {
-        return faker.address().secondaryAddress();
+    public static String randomHomePage() {
+        return faker.internet().url();
     }
 
-    public static String randomPhone2() {
-        return faker.phoneNumber().phoneNumber();
-    }
-
-    public static String randomNotes() {
-        return faker.lorem().sentence();
+    public static String randomFax() {
+        return faker.phoneNumber().cellPhone();
     }
 
     public static String randomPhoto() {
-        File[] files = new File("src/test/resources/images").listFiles();
-
+        File dir = new File("addressbook_web_tests/src/test/resources/images");
+        File[] files = dir.listFiles();
+        if (files == null || files.length == 0) {
+            return null; // если папки нет или она пуста
+        }
         return files[new Random().nextInt(files.length)].getAbsolutePath();
     }
 
@@ -71,6 +86,10 @@ public class ContactsDataGenerator {
                 "",
                 randomFirstName(),
                 randomLastName(),
+                randomMiddleName(),
+                randomNickname(),
+                randomTitle(),
+                randomCompany(),
                 randomAddress(),
                 randomHomePhone(),
                 randomMobilePhone(),
@@ -78,10 +97,10 @@ public class ContactsDataGenerator {
                 randomEmail(),
                 randomEmail2(),
                 randomEmail3(),
-                randomAddress2(),
-                randomPhone2(),
-                randomNotes(),
-                randomPhoto()
+                randomHomePage(),
+                randomPhoto(),
+                randomFax()
+
         );
     }
 

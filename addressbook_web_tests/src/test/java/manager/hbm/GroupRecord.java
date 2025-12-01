@@ -13,15 +13,19 @@ public class GroupRecord {
 
     @Id
     @Column(name = "group_id")
-    public int id;
-    @Column(name = "group_name")
-    public String name;
-    @Column(name = "group_header")
-    public String header;
-    @Column(name = "group_footer")
-    public String footer;
+    private int id;
 
-    public Date deprecated = new Date();
+    @Column(name = "group_name")
+    private String name;
+
+    @Column(name = "group_header")
+    private String header;
+
+    @Column(name = "group_footer")
+    private String footer;
+
+    @Column(name = "deprecated")
+    private Date deprecated = new Date();
 
     public GroupRecord() {
     }
@@ -33,4 +37,35 @@ public class GroupRecord {
         this.footer = footer;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getHeader() {
+        return header;
+    }
+
+    public void setHeader(String header) {
+        this.header = header;
+    }
+
+    public String getFooter() {
+        return footer;
+    }
+
+    public void setFooter(String footer) {
+        this.footer = footer;
+    }
 }

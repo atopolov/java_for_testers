@@ -52,9 +52,9 @@ public class ContactCreationTests extends TestBase {
     @MethodSource("multipleContactsProvider")
     public void createContactTest(ContactsData contact) {
 
-        var oldContacts = app.contacts().getContactList();
+        var oldContacts = app.hbm().getContactsList();
         app.contacts().createContact(contact);
-        var newContacts = app.contacts().getContactList();
+        var newContacts = app.hbm().getContactsList();
 
         assertEquals(oldContacts.size() + 1, newContacts.size(), "Количество контактов не увеличилось");
 

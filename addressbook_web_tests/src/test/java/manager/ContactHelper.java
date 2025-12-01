@@ -60,20 +60,23 @@ public class ContactHelper extends HelperBase {
 
             contacts.add(
                     new ContactsData(
-                            id,          // String
-                            firstName,   // String
-                            lastName,    // String
-                            null,        // address
-                            null,        // phone
-                            null,        // mobile
-                            null,        // work
-                            null,        // email
-                            null,        // email2
-                            null,        // email3
-                            null,        // address2
-                            null,        // phone2
-                            null,        // notes
-                            null         // photo
+                            id,
+                            firstName,
+                            lastName,
+                            "", // middlename
+                            "", // nickname
+                            "", // title
+                            "", // company
+                            "", // address
+                            "", // phone
+                            "", // mobile
+                            "", // work
+                            "", // email
+                            "", // email2
+                            "", // email3
+                            "", // homepage
+                            "", // photo
+                            ""  // fax
                     )
             );
         }
@@ -120,8 +123,18 @@ public class ContactHelper extends HelperBase {
     private void fillContactsForm(ContactsData data) {
         type(By.name("firstname"), data.firstname());
         type(By.name("lastname"), data.lastname());
+        type(By.name("middlename"), data.middlename());
+        type(By.name("nickname"), data.nickname());
+        type(By.name("title"), data.title());
+        type(By.name("company"), data.company());
         type(By.name("address"), data.address());
         type(By.name("home"), data.phone());
-        attach(By.name("photo"), data.photo());
+        type(By.name("mobile"), data.mobile());
+        type(By.name("work"), data.work());
+        type(By.name("email"), data.email());
+        type(By.name("email2"), data.email2());
+        type(By.name("email3"), data.email3());
+        type(By.name("homepage"), data.homepage());
+        type(By.name("fax"), data.fax());
     }
 }

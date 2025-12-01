@@ -22,7 +22,7 @@ public class HibernateHelper extends HelperBase {
         sessionFactory = new Configuration()
                 .addAnnotatedClass(ContactRecord.class)
                 .addAnnotatedClass(GroupRecord.class)
-                .setProperty(AvailableSettings.JAKARTA_JDBC_URL, "jdbc:mysql://localhost/addressbook")
+                .setProperty(AvailableSettings.JAKARTA_JDBC_URL, "jdbc:mysql://localhost/addressbook?serverTimezone=UTC&zeroDateTimeBehavior=CONVERT_TO_NULL")
                 .setProperty(AvailableSettings.JAKARTA_JDBC_USER, "root")
                 .setProperty(AvailableSettings.JAKARTA_JDBC_PASSWORD, "")
                 .buildSessionFactory();
@@ -38,10 +38,10 @@ public class HibernateHelper extends HelperBase {
 
     private static GroupData convert(GroupRecord record) {
         return new GroupData()
-                .withId("" + record.id)
-                .withName(record.name)
-                .withHeader(record.header)
-                .withFooter(record.footer);
+                .withId("" + record.getId())
+                .withName(record.getName())
+                .withHeader(record.getHeader())
+                .withFooter(record.getFooter());
     }
 
     private static GroupRecord convert(GroupData data) {
@@ -86,22 +86,25 @@ public class HibernateHelper extends HelperBase {
     }
 
     private static ContactsData convert(ContactRecord record) {
-        String id = String.valueOf(record.id);
+        String id = String.valueOf(record.getId());
         return new ContactsData(
                 id,
-                record.firstName,
-                record.lastName,
-                record.address,
-                record.homePhone,
-                record.mobilePhone,
-                record.workPhone,
-                record.email,
-                record.email2,
-                record.email3,
-                record.address2,
-                record.phone2,
-                record.notes,
-                record.photo
+                record.getFirstName(),
+                record.getLastName(),
+                record.getMiddleName(),
+                record.getNickname(),
+                record.getTitle(),
+                record.getCompany(),
+                record.getAddress(),
+                record.getHomePhone(),
+                record.getMobilePhone(),
+                record.getWorkPhone(),
+                record.getEmail(),
+                record.getEmail2(),
+                record.getEmail3(),
+                record.getHomepage(),
+                record.getPhoto(),
+                record.getFax()
         );
     }
 
@@ -112,6 +115,10 @@ public class HibernateHelper extends HelperBase {
                 id,
                 data.firstname(),
                 data.lastname(),
+                data.middlename(),
+                data.nickname(),
+                data.title(),
+                data.company(),
                 data.address(),
                 data.phone(),
                 data.mobile(),
@@ -119,11 +126,9 @@ public class HibernateHelper extends HelperBase {
                 data.email(),
                 data.email2(),
                 data.email3(),
-                data.address2(),
-                data.phone2(),
-                data.notes(),
-                data.photo()
-        );
+                data.homepage(),
+                data.photo(),
+                data.fax());
     }
 
     public List<ContactsData> getContactsList() {

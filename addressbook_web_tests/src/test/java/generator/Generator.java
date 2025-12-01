@@ -49,14 +49,18 @@ public class Generator {
     }
 
     private void run() throws IOException {
+        String baseDir = "addressbook_web_tests/";
+
         if ("groups".equals(type) || "all".equals(type)) {
             var groups = generateGroups(groupsCount);
+            if (groupsOutput != null) groupsOutput = baseDir + groupsOutput;
             save(groups, groupsOutput, groupsFormat);
             System.out.printf("Generated %d groups: %s%n", groups.size(), groupsOutput);
-
         }
+
         if ("contacts".equals(type) || "all".equals(type)) {
             var contacts = generateContacts(contactsCount);
+            if (contactsOutput != null) contactsOutput = baseDir + contactsOutput;
             save(contacts, contactsOutput, contactsFormat);
             System.out.printf("Generated %d contacts: %s%n", contacts.size(), contactsOutput);
         }

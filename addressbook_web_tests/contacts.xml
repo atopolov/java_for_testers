@@ -1,47 +1,59 @@
 <ArrayList>
   <item>
     <id></id>
-    <firstname>Adolph</firstname>
-    <lastname>Ritchie</lastname>
-    <address>76199 Paucek Squares, Port Timothyshire, VA 74998-9669</address>
-    <phone>360.406.6890</phone>
-    <email>alyse.moore@hotmail.com</email>
+    <firstname>Brent</firstname>
+    <lastname>Beatty</lastname>
+    <middlename>Ina Moen Crona</middlename>
+    <nickname>malcolm.robel</nickname>
+    <title>Direct Infrastructure Officer</title>
+    <company>Hagenes Group</company>
+    <address>Apt. 287 79394 Angel Lights, Port Leandro, RI 73430-9296</address>
+    <phone>664-534-3626</phone>
+    <mobile>773-982-9601</mobile>
+    <work>(534) 573-9778 x969</work>
+    <email>dexter.wiegand@gmail.com</email>
+    <email2>augustus.will@yahoo.com</email2>
+    <email3>adalberto.donnelly@hotmail.com</email3>
+    <homepage>www.nisha-satterfield.io</homepage>
     <photo>C:\Users\topolov.a\Desktop\homework\java_for_testers\addressbook_web_tests\src\test\resources\images\avatar3.png</photo>
+    <fax>486.118.8964</fax>
   </item>
   <item>
     <id></id>
-    <firstname>Donnie</firstname>
-    <lastname>Olson</lastname>
-    <address>Apt. 977 0040 Mariana Cliffs, South Roland, AK 14468-8899</address>
-    <phone>1-112-150-4876</phone>
-    <email>rana.mills@yahoo.com</email>
-    <photo>C:\Users\topolov.a\Desktop\homework\java_for_testers\addressbook_web_tests\src\test\resources\images\avatar5.png</photo>
-  </item>
-  <item>
-    <id></id>
-    <firstname>Delisa</firstname>
-    <lastname>Rogahn</lastname>
-    <address>Apt. 500 83593 Koch Port, Lake Zacharyport, NY 09895</address>
-    <phone>716.319.1306</phone>
-    <email>francis.mayert@hotmail.com</email>
-    <photo>C:\Users\topolov.a\Desktop\homework\java_for_testers\addressbook_web_tests\src\test\resources\images\avatar5.png</photo>
-  </item>
-  <item>
-    <id></id>
-    <firstname>Cassondra</firstname>
-    <lastname>Walter</lastname>
-    <address>03704 Wesley Road, North Nellburgh, GA 62500-8467</address>
-    <phone>054-543-5343</phone>
-    <email>yuette.beahan@gmail.com</email>
+    <firstname>Alan</firstname>
+    <lastname>Runolfsson</lastname>
+    <middlename>Yuk Sipes Roob</middlename>
+    <nickname>karie.stehr</nickname>
+    <title>Corporate Creative Associate</title>
+    <company>Crona, Beahan and Morissette</company>
+    <address>Suite 963 7423 Garry Square, Port Aundrea, DE 41656-7182</address>
+    <phone>225-468-4193</phone>
+    <mobile>(757) 478-9256</mobile>
+    <work>(320) 705-6795 x1831</work>
+    <email>shaquita.carroll@gmail.com</email>
+    <email2>phillis.turcotte@hotmail.com</email2>
+    <email3>marquis.greenfelder@yahoo.com</email3>
+    <homepage>www.aurelio-nitzsche.info</homepage>
     <photo>C:\Users\topolov.a\Desktop\homework\java_for_testers\addressbook_web_tests\src\test\resources\images\avatar3.png</photo>
+    <fax>1-817-756-1355</fax>
   </item>
   <item>
     <id></id>
-    <firstname>Ashly</firstname>
-    <lastname>Buckridge</lastname>
-    <address>Apt. 722 17495 Trudie Crossing, Lorileeborough, RI 47431</address>
-    <phone>1-442-547-2757</phone>
-    <email>suzette.okon@gmail.com</email>
+    <firstname>Clark</firstname>
+    <lastname>Deckow</lastname>
+    <middlename>Ramonita Hilpert Lynch</middlename>
+    <nickname>weldon.bednar</nickname>
+    <title>National Communications Technician</title>
+    <company>Beahan Inc</company>
+    <address>8544 Era Parkways, North Reginechester, CO 36226</address>
+    <phone>(394) 558-1579</phone>
+    <mobile>1-793-487-3213</mobile>
+    <work>(588) 991-5286 x95538</work>
+    <email>melida.okon@hotmail.com</email>
+    <email2>ronnie.gulgowski@yahoo.com</email2>
+    <email3>jacki.fay@hotmail.com</email3>
+    <homepage>www.basilia-dare.io</homepage>
     <photo>C:\Users\topolov.a\Desktop\homework\java_for_testers\addressbook_web_tests\src\test\resources\images\avatar4.png</photo>
+    <fax>886-986-5236</fax>
   </item>
 </ArrayList>

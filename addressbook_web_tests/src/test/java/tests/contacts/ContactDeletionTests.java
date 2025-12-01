@@ -15,8 +15,8 @@ public class ContactDeletionTests extends TestBase {
     @DisplayName("Удаление контакта")
     @Test
     public void deleteContactTest() {
-        if (app.contacts().getContactCount() == 0) {
-            app.contacts().createContact(randomContactsData());
+        if (app.hbm().getContactsCount() == 0) {
+            app.hbm().createContacts(randomContactsData());
         }
 
         var oldContacts = app.contacts().getContactList();
@@ -31,11 +31,11 @@ public class ContactDeletionTests extends TestBase {
     @DisplayName("Удаление всех контактов")
     @Test
     public void deleteAllContactsTest() {
-        if (app.contacts().getContactCount() == 0) {
-            app.contacts().createContact(randomContactsData());
+        if (app.hbm().getContactsCount() == 0) {
+            app.hbm().createContacts(randomContactsData());
         }
         app.contacts().removeAllContacts();
-        assertEquals(0, app.contacts().getContactCount());
+        assertEquals(0, app.hbm().getContactsCount());
 
     }
 

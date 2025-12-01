@@ -17,11 +17,11 @@ public class ContactModificationTests extends TestBase {
     @DisplayName("Изменение контакта")
     @Test
     public void modifyContactTest() {
-        if (app.contacts().getContactCount() == 0) {
-            app.contacts().createContact(randomContactsData());
+        if (app.hbm().getContactsCount() == 0) {
+            app.hbm().createContacts(randomContactsData());
         }
 
-        List<ContactsData> oldContacts = app.contacts().getContactList();
+        List<ContactsData> oldContacts = app.hbm().getContactsList();
         Random rnd = new Random();
         int index = rnd.nextInt(oldContacts.size());
 
@@ -30,6 +30,10 @@ public class ContactModificationTests extends TestBase {
                 originalContact.id(),
                 randomFirstName(),
                 randomLastName(),
+                randomMiddleName(),
+                randomNickname(),
+                randomTitle(),
+                randomCompany(),
                 randomAddress(),
                 randomHomePhone(),
                 randomMobilePhone(),
@@ -37,15 +41,14 @@ public class ContactModificationTests extends TestBase {
                 randomEmail(),
                 randomEmail2(),
                 randomEmail3(),
-                randomAddress2(),
-                randomPhone2(),
-                randomNotes(),
-                randomPhoto()
+                randomHomePage(),
+                originalContact.photo(),
+                randomFax()
         );
 
         app.contacts().modifyContact(originalContact, modifiedContact);
 
-        var newContacts = app.contacts().getContactList();
+        var newContacts = app.hbm().getContactsList();
 
         var expectedList = new ArrayList<>(oldContacts);
         expectedList.set(index, modifiedContact);

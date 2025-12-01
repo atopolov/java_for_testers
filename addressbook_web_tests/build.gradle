@@ -51,4 +51,5 @@ test {
 
     systemProperty "hibernate.show_sql", "false"
     systemProperty "hibernate.format_sql", "false"
+
 }
