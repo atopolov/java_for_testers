@@ -14,6 +14,7 @@ import static model.ContactsDataGenerator.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ContactModificationTests extends TestBase {
+
     @DisplayName("Изменение контакта")
     @Test
     public void modifyContactTest() {

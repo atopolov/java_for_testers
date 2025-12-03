@@ -35,9 +35,13 @@ public class ApplicationManager {
         registerShutdownHook();
 
         configureDriver();
-        driver.get(properties.getProperty("web.baseUrl"));
+        openHomePage();
 
         session().login(properties.getProperty("web.username"), properties.getProperty("web.password"));
+    }
+
+    public void openHomePage() {
+        driver.get(properties.getProperty("web.baseUrl"));
     }
 
     private WebDriver createDriver(String browser) {

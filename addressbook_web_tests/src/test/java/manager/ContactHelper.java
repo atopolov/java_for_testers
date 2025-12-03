@@ -10,12 +10,17 @@ import java.util.List;
 
 public class ContactHelper extends HelperBase {
 
-    private final By contactRows = By.xpath("//tr[@name='entry']");
-    private final By contactCheckbox = By.name("selected[]");
-    private final By newContactBtn = By.cssSelector("a[href='edit.php']");
-    private final By deleteBtn = By.name("delete");
-    private final By updateBtn = By.name("update");
-    private final By submitBtn = By.xpath("(//input[@name='submit'])[2]");
+    public static final By NEW_GROUP = By.name("new_group");
+    public static final By HOME_PAGE = By.linkText("home page");
+    public static final By REMOVE_BUTTON = By.name("remove");
+    public static final By GROUP_LIST = By.name("group");
+    public static final By GROUP_PAGE_RETURN = By.partialLinkText("group page");
+    private final By CONTACT_ROWS = By.xpath("//tr[@name='entry']");
+    private final By CONTACT_CHECKBOX = By.name("selected[]");
+    private final By NEW_CONTACT_BUTTON = By.cssSelector("a[href='edit.php']");
+    private final By DELETE_BUTTON = By.name("delete");
+    private final By UPDATE_BUTTON = By.name("update");
+    private final By SUBMIT_BUTTON = By.xpath("(//input[@name='submit'])[2]");
 
     public ContactHelper(ApplicationManager manager) {
         super(manager);
@@ -37,7 +42,7 @@ public class ContactHelper extends HelperBase {
     }
 
     private void selectGroup(GroupData group) {
-        new Select(manager.driver.findElement(By.name("new_group"))).selectByValue(group.id());
+        new Select(manager.driver.findElement(NEW_GROUP)).selectByValue(group.id());
     }
 
     public void modifyContact(ContactsData contact, ContactsData modifiedContact) {
@@ -60,15 +65,15 @@ public class ContactHelper extends HelperBase {
     }
 
     public int getContactCount() {
-        return manager.driver.findElements(contactCheckbox).size();
+        return manager.driver.findElements(CONTACT_CHECKBOX).size();
     }
 
     public List<ContactsData> getContactList() {
         var contacts = new ArrayList<ContactsData>();
-        var rows = manager.driver.findElements(contactRows);
+        var rows = manager.driver.findElements(CONTACT_ROWS);
 
         for (var row : rows) {
-            String id = row.findElement(contactCheckbox).getAttribute("value");
+            String id = row.findElement(CONTACT_CHECKBOX).getAttribute("value");
             String lastName = row.findElement(By.xpath("./td[2]")).getText();
             String firstName = row.findElement(By.xpath("./td[3]")).getText();
 
@@ -99,11 +104,11 @@ public class ContactHelper extends HelperBase {
     }
 
     private void openNewContactPage() {
-        click(newContactBtn);
+        click(NEW_CONTACT_BUTTON);
     }
 
     private void returnToHomePage() {
-        click(By.linkText("home page"));
+        click(HOME_PAGE);
     }
 
     private void openContactEditPage(String contactId) {
@@ -112,15 +117,15 @@ public class ContactHelper extends HelperBase {
     }
 
     private void submitNewContact() {
-        click(submitBtn);
+        click(SUBMIT_BUTTON);
     }
 
     private void submitEditedContact() {
-        click(updateBtn);
+        click(UPDATE_BUTTON);
     }
 
     private void deleteSelectedContacts() {
-        click(deleteBtn);
+        click(DELETE_BUTTON);
     }
 
     private void selectContact(String contactId) {
@@ -128,7 +133,7 @@ public class ContactHelper extends HelperBase {
     }
 
     private void selectAllContacts() {
-        var checkboxes = manager.driver.findElements(contactCheckbox);
+        var checkboxes = manager.driver.findElements(CONTACT_CHECKBOX);
         for (var checkbox : checkboxes) {
             checkbox.click();
         }
@@ -150,5 +155,30 @@ public class ContactHelper extends HelperBase {
         type(By.name("email3"), data.email3());
         type(By.name("homepage"), data.homepage());
         type(By.name("fax"), data.fax());
+    }
+
+    public void removeContactFromGroup(ContactsData contactToRemove, GroupData group) {
+        manager.openHomePage();
+        selectGroupFromList(group);
+        selectContactInGroup(contactToRemove);
+        removeContact();
+        returnToGroupPage();
+    }
+
+    private void returnToGroupPage() {
+        click(GROUP_PAGE_RETURN);
+    }
+
+    private void removeContact() {
+        click(REMOVE_BUTTON);
+    }
+
+    private void selectContactInGroup(ContactsData contactToRemove) {
+        click(By.cssSelector("input[name='selected[]'][value='" + contactToRemove.id() + "']"));
+    }
+
+    private void selectGroupFromList(GroupData group) {
+        new Select(manager.driver.findElement(GROUP_LIST))
+                .selectByVisibleText(group.name());
     }
 }

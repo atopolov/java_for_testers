@@ -41,7 +41,7 @@ public class HelperBase {
                 .until(ExpectedConditions.elementToBeClickable(locator));
     }
 
-    private WebElement waitForVisible(By locator) {
+    protected WebElement waitForVisible(By locator) {
         return new WebDriverWait(manager.driver, TIMEOUT)
                 .until(ExpectedConditions.visibilityOfElementLocated(locator));
     }

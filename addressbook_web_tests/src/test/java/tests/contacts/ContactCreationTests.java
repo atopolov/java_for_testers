@@ -84,6 +84,7 @@ public class ContactCreationTests extends TestBase {
         assertEquals(expectedList, newContacts, "Списки контактов не совпадают после создания нового контакта");
     }
 
+    @DisplayName("Создание контакта в группе")
     @Test
     public void canCreateContactInGroup() {
 
@@ -92,7 +93,7 @@ public class ContactCreationTests extends TestBase {
         if (app.hbm().getGroupCount() == 0) {
             app.hbm().createGroup(randomGroupData());
         }
-        var group = app.hbm().getGroupList().get(0);
+        var group = app.hbm().getGroupList().getFirst();
 
         var oldRelated = app.hbm().getContactsInGroup(group);
         app.contacts().createContact(contacs, group);
@@ -102,10 +103,9 @@ public class ContactCreationTests extends TestBase {
                 "Количество контактов в группе должно увеличиться на 1");
 
         boolean contactAdded = false;
+
         for (var c : newRelated) {
-            if (c.firstname().equals(contacs.firstname()) &&
-                    c.lastname().equals(contacs.lastname()) &&
-                    c.mobile().equals(contacs.mobile())) {
+            if (c.id().equals(contacs.id())) {
                 contactAdded = true;
                 break;
             }
