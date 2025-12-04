@@ -104,6 +104,15 @@ public class ContactCreationTests extends TestBase {
         }
 
         var contactsNotInGroup = app.hbm().getContactsNotInGroup(group);
+
+        if (contactsNotInGroup.isEmpty()) {
+            var newContact = ContactsDataGenerator.randomContactsData();
+            app.contacts().createContact(newContact,
+                    null
+            );
+            contactsNotInGroup = app.hbm().getContactsNotInGroup(group);
+        }
+
         var contactToAdd = contactsNotInGroup.getFirst();
 
         var oldRelated = app.hbm().getContactsInGroup(group);
@@ -128,8 +137,7 @@ public class ContactCreationTests extends TestBase {
         Assertions.assertTrue(contactAdded,
                 "Добавленный контакт должен присутствовать в группе");
     }
-
-    }
+}
 
 
 
