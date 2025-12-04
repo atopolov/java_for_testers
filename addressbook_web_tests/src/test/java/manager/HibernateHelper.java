@@ -103,8 +103,7 @@ public class HibernateHelper extends HelperBase {
                 record.getEmail2(),
                 record.getEmail3(),
                 record.getHomepage(),
-                record.getPhoto(),
-                record.getFax()
+                record.getPhoto()
         );
     }
 
@@ -127,8 +126,7 @@ public class HibernateHelper extends HelperBase {
                 data.email2(),
                 data.email3(),
                 data.homepage(),
-                data.photo(),
-                data.fax());
+                data.photo());
     }
 
     public List<ContactsData> getContactsList() {
@@ -156,4 +154,24 @@ public class HibernateHelper extends HelperBase {
             return convertContactsList(session.get(GroupRecord.class, group.id()).contacts);
         });
     }
+
+    public List<ContactsData> getContactsNotInGroup(GroupData group) {
+        try (Session session = sessionFactory.openSession()) {
+
+            List<ContactRecord> records = session.createQuery(
+                            "SELECT c FROM ContactRecord c " +
+                                    "WHERE c.id NOT IN (" +
+                                    "   SELECT c2.id FROM GroupRecord g " +
+                                    "   JOIN g.contacts c2 " +
+                                    "   WHERE g.id = :groupId" +
+                                    ")",
+                            ContactRecord.class
+                    )
+                    .setParameter("groupId", Integer.parseInt(group.id()))
+                    .list();
+
+            return convertContactsList(records);
+        }
+    }
+
 }

@@ -16,7 +16,6 @@
     <email3>adalberto.donnelly@hotmail.com</email3>
     <homepage>www.nisha-satterfield.io</homepage>
     <photo>C:\Users\topolov.a\Desktop\homework\java_for_testers\addressbook_web_tests\src\test\resources\images\avatar3.png</photo>
-    <fax>486.118.8964</fax>
   </item>
   <item>
     <id></id>
@@ -35,7 +34,6 @@
     <email3>marquis.greenfelder@yahoo.com</email3>
     <homepage>www.aurelio-nitzsche.info</homepage>
     <photo>C:\Users\topolov.a\Desktop\homework\java_for_testers\addressbook_web_tests\src\test\resources\images\avatar3.png</photo>
-    <fax>1-817-756-1355</fax>
   </item>
   <item>
     <id></id>
@@ -54,6 +52,5 @@
     <email3>jacki.fay@hotmail.com</email3>
     <homepage>www.basilia-dare.io</homepage>
     <photo>C:\Users\topolov.a\Desktop\homework\java_for_testers\addressbook_web_tests\src\test\resources\images\avatar4.png</photo>
-    <fax>886-986-5236</fax>
   </item>
 </ArrayList>

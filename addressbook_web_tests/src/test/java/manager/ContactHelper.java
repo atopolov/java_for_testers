@@ -3,6 +3,7 @@ package manager;
 import model.ContactsData;
 import model.GroupData;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 import java.util.ArrayList;
@@ -11,10 +12,11 @@ import java.util.List;
 public class ContactHelper extends HelperBase {
 
     public static final By NEW_GROUP = By.name("new_group");
+    public static final By TO_GROUP = By.name("to_group");
     public static final By HOME_PAGE = By.linkText("home page");
     public static final By REMOVE_BUTTON = By.name("remove");
     public static final By GROUP_LIST = By.name("group");
-    public static final By GROUP_PAGE_RETURN = By.partialLinkText("group page");
+    public static final By GROUP_PAGE_RETURN = By.cssSelector("a[href*='group=']");
     private final By CONTACT_ROWS = By.xpath("//tr[@name='entry']");
     private final By CONTACT_CHECKBOX = By.name("selected[]");
     private final By NEW_CONTACT_BUTTON = By.cssSelector("a[href='edit.php']");
@@ -36,13 +38,18 @@ public class ContactHelper extends HelperBase {
     public void createContact(ContactsData contact, GroupData group) {
         openNewContactPage();
         fillContactsForm(contact);
-        selectGroup(group);
+
+        if (group != null) {
+            selectGroup(group);
+        }
+
         submitNewContact();
         returnToHomePage();
     }
 
     private void selectGroup(GroupData group) {
-        new Select(manager.driver.findElement(NEW_GROUP)).selectByValue(group.id());
+        WebElement groupDropdown = manager.driver.findElement(NEW_GROUP);
+        new Select(groupDropdown).selectByValue(group.id());
     }
 
     public void modifyContact(ContactsData contact, ContactsData modifiedContact) {
@@ -94,8 +101,7 @@ public class ContactHelper extends HelperBase {
                             "", // email2
                             "", // email3
                             "", // homepage
-                            "", // photo
-                            ""  // fax
+                            "" // photo
                     )
             );
         }
@@ -154,7 +160,6 @@ public class ContactHelper extends HelperBase {
         type(By.name("email2"), data.email2());
         type(By.name("email3"), data.email3());
         type(By.name("homepage"), data.homepage());
-        type(By.name("fax"), data.fax());
     }
 
     public void removeContactFromGroup(ContactsData contactToRemove, GroupData group) {
@@ -179,6 +184,19 @@ public class ContactHelper extends HelperBase {
 
     private void selectGroupFromList(GroupData group) {
         new Select(manager.driver.findElement(GROUP_LIST))
-                .selectByVisibleText(group.name());
+                .selectByValue(group.id());
+    }
+
+    public void addContactToGroup(ContactsData contacts, GroupData group) {
+        manager.openHomePage();
+        selectContact(contacts.id());
+        WebElement groupDropdown = manager.driver.findElement(TO_GROUP);
+        new Select(groupDropdown).selectByValue(group.id());
+        addToGroup();
+        returnToGroupPage();
+    }
+
+    private void addToGroup() {
+        click(By.name("add"));
     }
 }

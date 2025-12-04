@@ -6,6 +6,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import model.ContactsData;
 import model.ContactsDataGenerator;
+import model.GroupData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -84,36 +85,52 @@ public class ContactCreationTests extends TestBase {
         assertEquals(expectedList, newContacts, "Списки контактов не совпадают после создания нового контакта");
     }
 
-    @DisplayName("Создание контакта в группе")
+    @DisplayName("Добавление контакта в группу")
     @Test
-    public void canCreateContactInGroup() {
-
-        var contacs = ContactsDataGenerator.randomContactsData();
+    public void canAddExistingContactToGroup() {
 
         if (app.hbm().getGroupCount() == 0) {
             app.hbm().createGroup(randomGroupData());
         }
+
         var group = app.hbm().getGroupList().getFirst();
 
+        var contact = ContactsDataGenerator.randomContactsData();
+
+        if (app.hbm().getContactsCount() == 0) {
+            app.contacts().createContact(contact,
+                    null
+            );
+        }
+
+        var contactsNotInGroup = app.hbm().getContactsNotInGroup(group);
+        var contactToAdd = contactsNotInGroup.getFirst();
+
         var oldRelated = app.hbm().getContactsInGroup(group);
-        app.contacts().createContact(contacs, group);
+
+        app.contacts().addContactToGroup(contactToAdd, group);
+
         var newRelated = app.hbm().getContactsInGroup(group);
 
-        Assertions.assertEquals(oldRelated.size() + 1, newRelated.size(),
-                "Количество контактов в группе должно увеличиться на 1");
+        Assertions.assertEquals(
+                oldRelated.size() + 1,
+                newRelated.size(),
+                "Количество контактов в группе должно увеличиться на 1"
+        );
 
         boolean contactAdded = false;
-
         for (var c : newRelated) {
-            if (c.id().equals(contacs.id())) {
+            if (c.id().equals(contactToAdd.id())) {
                 contactAdded = true;
                 break;
             }
         }
-
         Assertions.assertTrue(contactAdded,
-                "Новый контакт должен присутствовать в списке контактов выбранной группы");
+                "Добавленный контакт должен присутствовать в группе");
     }
-}
+
+    }
+
+
 
 

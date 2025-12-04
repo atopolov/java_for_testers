@@ -56,19 +56,27 @@ public class ContactRecord {
     private String homepage;
 
     @Column(name = "photo")
-    public String photo;
-
-    @Column(name = "fax")
-    public String fax;
+    private String photo;
 
     public ContactRecord() {
     }
 
-    public ContactRecord(int id, String firstName, String lastName, String middleName, String nickname, String title,
-                         String company, String address,
-                         String homePhone, String mobilePhone, String workPhone,
-                         String email, String email2, String email3,
-                         String homepage, String photo, String fax) {
+    public ContactRecord(int id,
+                         String firstName,
+                         String lastName,
+                         String middleName,
+                         String nickname,
+                         String title,
+                         String company,
+                         String address,
+                         String homePhone,
+                         String mobilePhone,
+                         String workPhone,
+                         String email,
+                         String email2,
+                         String email3,
+                         String homepage,
+                         String photo) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -85,8 +93,9 @@ public class ContactRecord {
         this.email3 = email3;
         this.homepage = homepage;
         this.photo = photo;
-        this.fax = fax;
     }
+
+    // getters / setters
 
     public int getId() {
         return id;
@@ -214,13 +223,5 @@ public class ContactRecord {
 
     public void setPhoto(String photo) {
         this.photo = photo;
-    }
-
-    public String getFax() {
-        return fax;
-    }
-
-    public void setFax(String fax) {
-        this.fax = fax;
     }
 }

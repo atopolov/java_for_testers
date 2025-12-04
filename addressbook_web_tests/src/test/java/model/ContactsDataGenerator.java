@@ -68,9 +68,6 @@ public class ContactsDataGenerator {
         return faker.internet().url();
     }
 
-    public static String randomFax() {
-        return faker.phoneNumber().cellPhone();
-    }
 
     public static String randomPhoto() {
         File dir = new File("addressbook_web_tests/src/test/resources/images");
@@ -98,9 +95,7 @@ public class ContactsDataGenerator {
                 randomEmail2(),
                 randomEmail3(),
                 randomHomePage(),
-                randomPhoto(),
-                randomFax()
-
+                randomPhoto()
         );
     }
 

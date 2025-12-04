@@ -43,8 +43,7 @@ public class ContactModificationTests extends TestBase {
                 randomEmail2(),
                 randomEmail3(),
                 randomHomePage(),
-                originalContact.photo(),
-                randomFax()
+                originalContact.photo()
         );
 
         app.contacts().modifyContact(originalContact, modifiedContact);
