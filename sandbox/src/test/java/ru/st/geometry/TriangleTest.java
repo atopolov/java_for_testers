@@ -4,13 +4,13 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("Тестирование класса Triangle")
+@DisplayName("Triangle class testing")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TriangleTest {
 
     @Test
     @Order(1)
-    @DisplayName("Корректный треугольник (3,4,5)")
+    @DisplayName("Valid triangle (3,4,5)")
     void testValidTriangle() throws NegativeSideException, InvalidTriangleException {
         Triangle t = new Triangle(3, 4, 5);
         assertEquals(12.0, t.getPerimeter());
@@ -19,56 +19,56 @@ public class TriangleTest {
 
     @Test
     @Order(5)
-    @DisplayName("Отрицательная длина стороны должна вызывать NegativeSideException")
+    @DisplayName("Negative side length should throw NegativeSideException")
     void testNegativeSide() {
         NegativeSideException exception = assertThrows(
                 NegativeSideException.class, () -> new Triangle(-3, 4, 5));
-        assertEquals("Стороны треугольника должны быть положительными", exception.getMessage());
+        assertEquals("Triangle sides must be positive", exception.getMessage());
     }
 
     @Test
     @Order(6)
-    @DisplayName("Нарушение неравенства треугольника должно вызывать InvalidTriangleException")
+    @DisplayName("Triangle inequality violation should throw InvalidTriangleException")
     void testTriangleInequalityViolation() {
         InvalidTriangleException exception = assertThrows(
                 InvalidTriangleException.class, () -> new Triangle(1, 2, 10)
         );
-        assertEquals("Нарушено неравенство треугольника", exception.getMessage());
+        assertEquals("Triangle inequality violated", exception.getMessage());
     }
 
     @Test
     @Order(2)
-    @DisplayName("Проверка периметра треугольника (3,4,5)")
+    @DisplayName("Check perimeter of triangle (3,4,5)")
     void testPerimeter() {
         Triangle t1 = new Triangle(3, 4, 5);
-        assertEquals(12.0, t1.getPerimeter(), "Периметр должен быть равен 12.0");
+        assertEquals(12.0, t1.getPerimeter(), "Perimeter should be 12.0");
     }
 
     @Test
     @Order(3)
-    @DisplayName("Проверка площади треугольника (3,4,5) по формуле Герона")
+    @DisplayName("Check area of triangle (3,4,5) using Heron's formula")
     void testArea() {
         Triangle t1 = new Triangle(3, 4, 5);
-        assertEquals(6.0, t1.getArea(), "Площадь должна быть равна 6.0");
+        assertEquals(6.0, t1.getArea(), "Area should be 6.0");
     }
 
     @Test
     @Order(4)
-    @DisplayName("Проверка треугольника (6,8,10)")
+    @DisplayName("Check another triangle (6,8,10)")
     void testAnotherTriangle() {
         Triangle t2 = new Triangle(6, 8, 10);
-        assertEquals(24.0, t2.getPerimeter(), "Периметр должен быть равен 24.0");
-        assertEquals(24.0, t2.getArea(), "Площадь должна быть равна 24.0");
+        assertEquals(24.0, t2.getPerimeter(), "Perimeter should be 24.0");
+        assertEquals(24.0, t2.getArea(), "Area should be 24.0");
     }
 
     @Test
     @Order(7)
-    @DisplayName("Проверка равности треугольников")
+    @DisplayName("Check equality of triangles")
     void testEqualTriangles() {
         Triangle t1 = new Triangle(3, 4, 5);
         Triangle t2 = new Triangle(5, 4, 3);
         Triangle t3 = new Triangle(2, 4, 5);
-        assertEquals(t1, t2, "Треугольники должны быть равны");
-        assertNotEquals(t1, t3, "Треугольники не должны быть равны");
+        assertEquals(t1, t2, "Triangles should be equal");
+        assertNotEquals(t1, t3, "Triangles should not be equal");
     }
 }

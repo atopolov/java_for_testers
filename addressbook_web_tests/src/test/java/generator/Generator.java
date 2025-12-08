@@ -6,15 +6,14 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
-import model.ContactsData;
 import model.ContactsDataGenerator;
-import model.GroupData;
 import model.GroupDataGenerator;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Generator {
 
@@ -52,34 +51,36 @@ public class Generator {
         String baseDir = "addressbook_web_tests/";
 
         if ("groups".equals(type) || "all".equals(type)) {
-            var groups = generateGroups(groupsCount);
+            var groups = generateGroups();
             if (groupsOutput != null) groupsOutput = baseDir + groupsOutput;
             save(groups, groupsOutput, groupsFormat);
-            System.out.printf("Generated %d groups: %s%n", groups.size(), groupsOutput);
         }
 
         if ("contacts".equals(type) || "all".equals(type)) {
-            var contacts = generateContacts(contactsCount);
+            var contacts = generateContacts();
             if (contactsOutput != null) contactsOutput = baseDir + contactsOutput;
             save(contacts, contactsOutput, contactsFormat);
-            System.out.printf("Generated %d contacts: %s%n", contacts.size(), contactsOutput);
         }
     }
 
-    private List<GroupData> generateGroups(int groupsCount) {
-        List<GroupData> groups = new ArrayList<>();
-        for (int i = 0; i < groupsCount; i++) {
-            groups.add(GroupDataGenerator.randomGroupData());
-        }
-        return groups;
+    private Object generateGroupData(Supplier<Object> dataSupplier) {
+        return Stream.generate(dataSupplier)
+                .limit(groupsCount)
+                .collect(Collectors.toList());
     }
 
-    private List<ContactsData> generateContacts(int contactsCount) {
-        List<ContactsData> contacts = new ArrayList<>();
-        for (int i = 0; i < contactsCount; i++) {
-            contacts.add(ContactsDataGenerator.randomContactsData());
-        }
-        return contacts;
+    private Object generateGroups() {
+        return generateGroupData(GroupDataGenerator::randomGroupData);
+    }
+
+    private Object generateContactData(Supplier<Object> dataSupplier) {
+        return Stream.generate(dataSupplier)
+                .limit(contactsCount)
+                .collect(Collectors.toList());
+    }
+
+    private Object generateContacts() {
+        return generateContactData(ContactsDataGenerator::randomContactsData);
     }
 
     private void save(Object data, String output, String format) throws IOException {

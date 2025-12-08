@@ -1,17 +1,17 @@
 package tests.groups;
 
 import model.GroupData;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tests.TestBase;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Random;
+import java.util.Set;
 
 import static model.GroupDataGenerator.randomGroupData;
 import static model.GroupDataGenerator.randomGroupName;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GroupModificationTests extends TestBase {
 
@@ -31,9 +31,6 @@ public class GroupModificationTests extends TestBase {
         var expectedList = new ArrayList<>(oldGroups);
         expectedList.set(index, testData.withId(oldGroups.get(index).id()));
 
-        expectedList.sort(Comparator.comparing(GroupData::id));
-        newGroups.sort(Comparator.comparing(GroupData::id));
-
-        assertEquals(expectedList, newGroups, "Списки групп не совпадают после модификации");
+        Assertions.assertEquals(Set.copyOf(newGroups), Set.copyOf(expectedList));
     }
 }

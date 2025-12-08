@@ -2,9 +2,10 @@ package manager;
 
 import model.GroupData;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GroupHelper extends HelperBase {
 
@@ -60,15 +61,10 @@ public class GroupHelper extends HelperBase {
     public List<GroupData> getGroupList() {
         openGroupsPage();
         var groupElements = manager.driver.findElements(By.cssSelector("span.group"));
-        var groups = new ArrayList<GroupData>();
 
-        for (var element : groupElements) {
-            String name = element.getText();
-            String id = element.findElement(GROUP_CHECKBOXES).getAttribute("value");
-            groups.add(new GroupData().withId(id).withName(name));
-        }
-
-        return groups;
+        return groupElements.stream()
+                .map(element -> new GroupData().withId(element.findElement(GROUP_CHECKBOXES).getAttribute("value")).withName(element.getText()))
+                .collect(Collectors.toList());
     }
 
     public void openGroupsPage() {
@@ -106,9 +102,8 @@ public class GroupHelper extends HelperBase {
     }
 
     private void selectAllGroups() {
-        for (var checkbox : manager.driver.findElements(GROUP_CHECKBOXES)) {
-            checkbox.click();
-        }
+        manager.driver
+                .findElements(GROUP_CHECKBOXES).forEach(WebElement::click);
     }
 
     private void fillGroupForm(GroupData group) {

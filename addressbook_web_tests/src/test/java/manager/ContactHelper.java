@@ -6,14 +6,14 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ContactHelper extends HelperBase {
 
     public static final By NEW_GROUP = By.name("new_group");
     public static final By TO_GROUP = By.name("to_group");
-    public static final By HOME_PAGE = By.linkText("home page");
+    public static final By HOME_PAGE = By.linkText("home");
     public static final By REMOVE_BUTTON = By.name("remove");
     public static final By GROUP_LIST = By.name("group");
     public static final By GROUP_PAGE_RETURN = By.cssSelector("a[href*='group=']");
@@ -76,37 +76,34 @@ public class ContactHelper extends HelperBase {
     }
 
     public List<ContactsData> getContactList() {
-        var contacts = new ArrayList<ContactsData>();
         var rows = manager.driver.findElements(CONTACT_ROWS);
 
-        for (var row : rows) {
-            String id = row.findElement(CONTACT_CHECKBOX).getAttribute("value");
-            String lastName = row.findElement(By.xpath("./td[2]")).getText();
-            String firstName = row.findElement(By.xpath("./td[3]")).getText();
+        return rows.stream()
+                .map(row -> {
+                    String id = row.findElement(CONTACT_CHECKBOX).getAttribute("value");
+                    String lastName = row.findElement(By.xpath("./td[2]")).getText();
+                    String firstName = row.findElement(By.xpath("./td[3]")).getText();
 
-            contacts.add(
-                    new ContactsData(
+                    return new ContactsData(
                             id,
                             firstName,
                             lastName,
-                            "", // middlename
-                            "", // nickname
-                            "", // title
-                            "", // company
-                            "", // address
-                            "", // phone
-                            "", // mobile
-                            "", // work
-                            "", // email
-                            "", // email2
-                            "", // email3
-                            "", // homepage
-                            "" // photo
-                    )
-            );
-        }
-
-        return contacts;
+                            "",  // middlename
+                            "",  // nickname
+                            "",  // title
+                            "",  // company
+                            "",  // address
+                            "",  // phone
+                            "",  // mobile
+                            "",  // work
+                            "",  // email
+                            "",  // email2
+                            "",  // email3
+                            "",  // homepage
+                            ""   // photo
+                    );
+                })
+                .collect(Collectors.toList());
     }
 
     private void openNewContactPage() {
@@ -139,10 +136,8 @@ public class ContactHelper extends HelperBase {
     }
 
     private void selectAllContacts() {
-        var checkboxes = manager.driver.findElements(CONTACT_CHECKBOX);
-        for (var checkbox : checkboxes) {
-            checkbox.click();
-        }
+        manager.driver
+                .findElements(CONTACT_CHECKBOX).forEach(WebElement::click);
     }
 
     private void fillContactsForm(ContactsData data) {
@@ -198,5 +193,72 @@ public class ContactHelper extends HelperBase {
 
     private void addToGroup() {
         click(By.name("add"));
+    }
+
+    private String getContactCellText(ContactsData contact, int column) {
+        return manager.driver.findElement(
+                By.xpath(String.format("//input[@id='%s']/ancestor::tr/td[%d]", contact.id(), column))
+        ).getText();
+    }
+
+    public String getPhones(ContactsData contact) {
+        return getContactCellText(contact, 6);
+    }
+
+    public String getEmails(ContactsData contact) {
+        return getContactCellText(contact, 5);
+    }
+
+    public String getAddress(ContactsData contact) {
+        return getContactCellText(contact, 4);
+    }
+
+    public static String cleanPhone(String phone) {
+        return phone.replaceAll("[^0-9]", "");
+    }
+
+    private String getValue(String fieldName) {
+        return manager.driver.findElement(By.name(fieldName)).getAttribute("value");
+    }
+
+    public ContactsData getContactFromEditForm(ContactsData contact) {
+        openContactEditPage(contact.id());
+
+        String firstname = getValue("firstname");
+        String lastname = getValue("lastname");
+        String middlename = getValue("middlename");
+        String nickname = getValue("nickname");
+        String title = getValue("title");
+        String company = getValue("company");
+        String address = getValue("address");
+        String phone = getValue("home");
+        String mobile = getValue("mobile");
+        String work = getValue("work");
+        String email = getValue("email");
+        String email2 = getValue("email2");
+        String email3 = getValue("email3");
+        String homepage = getValue("homepage");
+        String photo = getValue("photo");
+
+        returnToHomePage();
+
+        return new ContactsData(
+                contact.id(),
+                firstname,
+                lastname,
+                middlename,
+                nickname,
+                title,
+                company,
+                address,
+                phone,
+                mobile,
+                work,
+                email,
+                email2,
+                email3,
+                homepage,
+                photo
+        );
     }
 }

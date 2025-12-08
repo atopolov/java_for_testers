@@ -8,6 +8,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import java.time.Duration;
+import java.util.Optional;
 import java.util.Properties;
 
 public class ApplicationManager {
@@ -25,7 +26,6 @@ public class ApplicationManager {
 
     public void init(String browser, Properties properties) {
         this.properties = properties;
-
 
         if (driver != null) {
             return;
@@ -69,38 +69,38 @@ public class ApplicationManager {
     }
 
     public LoginHelper session() {
-        if (loginHelper == null) {
+        return Optional.ofNullable(loginHelper).orElseGet(() -> {
             loginHelper = new LoginHelper(this);
-        }
-        return loginHelper;
+            return loginHelper;
+        });
     }
 
     public GroupHelper groups() {
-        if (groupHelper == null) {
+        return Optional.ofNullable(groupHelper).orElseGet(() -> {
             groupHelper = new GroupHelper(this);
-        }
-        return groupHelper;
+            return groupHelper;
+        });
     }
 
     public ContactHelper contacts() {
-        if (contactHelper == null) {
+        return Optional.ofNullable(contactHelper).orElseGet(() -> {
             contactHelper = new ContactHelper(this);
-        }
-        return contactHelper;
+            return contactHelper;
+        });
     }
 
     public JdbcHelper jdbcHelper() {
-        if (jdbcHelper == null) {
+        return Optional.ofNullable(jdbcHelper).orElseGet(() -> {
             jdbcHelper = new JdbcHelper(this);
-        }
-        return jdbcHelper;
+            return jdbcHelper;
+        });
     }
 
     public HibernateHelper hbm() {
-        if (hbm == null) {
+        return Optional.ofNullable(hbm).orElseGet(() -> {
             hbm = new HibernateHelper(this);
-        }
-        return hbm;
+            return hbm;
+        });
     }
 
     public boolean isElementPresent(By locator) {

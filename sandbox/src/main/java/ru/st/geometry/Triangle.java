@@ -1,19 +1,24 @@
 package ru.st.geometry;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 public record Triangle(double a, double b, double c) {
 
     public Triangle {
         if (a <= 0 || b <= 0 || c <= 0) {
-            throw new NegativeSideException("Стороны треугольника должны быть положительными");
+            throw new NegativeSideException("Triangle sides must be positive");
         }
 
         if (a + b <= c || a + c <= b || b + c <= a) {
-            throw new InvalidTriangleException("Нарушено неравенство треугольника");
+            throw new InvalidTriangleException("Triangle sides must satisfy triangle inequality");
         }
     }
+
+    public static void print(Triangle triangle) {
+        System.out.println(triangle.toString());
+    }
+
+
 
     public double getPerimeter() {
         return a + b + c;
@@ -27,7 +32,7 @@ public record Triangle(double a, double b, double c) {
     @Override
     public String toString() {
         return String.format(
-                "Треугольник со сторонами: %.2f см, %.2f см, %.2f см (Периметр: %.2f см, Площадь: %.2f см²)",
+                "Triangle with sides: %.2f sm, %.2f sm, %.2f sm (Perimeter: %.2f sm, Area: %.2f sq. sm)",
                 a, b, c, getPerimeter(), getArea()
         );
     }

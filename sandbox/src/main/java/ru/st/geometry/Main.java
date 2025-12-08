@@ -1,19 +1,34 @@
 package ru.st.geometry;
 
+
+import java.util.Random;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+
 public class Main {
-    public static void main(String[] args) throws NegativeSideException, InvalidTriangleException {
+    public static void main(String[] args) {
 
-        Triangle t1 = new Triangle(3, 4, 5);
-        Triangle t2 = new Triangle(6, 8, 10);
+        Random random = new Random();
 
-        System.out.println(t1);
-        System.out.println("Периметр: " + t1.getPerimeter());
-        System.out.println("Площадь: " + t1.getArea());
-        System.out.println();
+        Supplier<Triangle> randomTriangle = () -> {
+            while (true) {
+                int a = random.nextInt(99) + 1;
+                int b = random.nextInt(99) + 1;
+                int c = random.nextInt(99) + 1;
 
-        System.out.println(t2);
-        System.out.println("Периметр: " + t2.getPerimeter());
-        System.out.println("Площадь: " + t2.getArea());
+                try {
+                    return new Triangle(a, b, c);
+                } catch (NegativeSideException | InvalidTriangleException e) {
+                }
+            }
+        };
 
+        var triangles = Stream.generate(randomTriangle)
+                .limit(5)
+                .toList();
+
+        triangles.forEach(Triangle::print);
     }
 }
+
+

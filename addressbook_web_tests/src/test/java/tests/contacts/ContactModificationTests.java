@@ -1,14 +1,15 @@
 package tests.contacts;
 
 import model.ContactsData;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tests.TestBase;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import static model.ContactsDataGenerator.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -53,9 +54,6 @@ public class ContactModificationTests extends TestBase {
         var expectedList = new ArrayList<>(oldContacts);
         expectedList.set(index, modifiedContact);
 
-        expectedList.sort(Comparator.comparing(ContactsData::id));
-        newContacts.sort(Comparator.comparing(ContactsData::id));
-
-        assertEquals(expectedList, newContacts, "Списки контактов не совпадают после модификации");
+        Assertions.assertEquals(Set.copyOf(expectedList), Set.copyOf(newContacts), "Списки контактов не совпадают после модификации");
     }
 }

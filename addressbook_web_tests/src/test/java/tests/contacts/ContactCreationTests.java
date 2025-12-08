@@ -6,7 +6,6 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import model.ContactsData;
 import model.ContactsDataGenerator;
-import model.GroupData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,7 +47,7 @@ public class ContactCreationTests extends TestBase {
             throw new IllegalArgumentException("Неподдерживаемый формат файла: " + CONTACTS_XML);
         }
 
-        return mapper.readValue(file, new TypeReference<List<ContactsData>>() {
+        return mapper.readValue(file, new TypeReference<>() {
         });
     }
 
