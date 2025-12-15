@@ -6,6 +6,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import java.time.Duration;
+import java.util.Optional;
 import java.util.Properties;
 
 public class ApplicationManager {
@@ -16,6 +17,10 @@ public class ApplicationManager {
     private WebDriver driver;
     private String browser;
     private Properties properties;
+    private SessionHelper sessionHelper;
+    private HttpSessionHelper httpSessionHelper;
+    private JamesCliHelper jamesCliHelper;
+    private MailHelper mailHelper;
 
     public void init(String browser, Properties properties) {
         this.properties = properties;
@@ -59,4 +64,41 @@ public class ApplicationManager {
             }
         }));
     }
+
+    public SessionHelper session() {
+        return Optional.ofNullable(sessionHelper)
+                .orElseGet(() -> {
+                    sessionHelper = new SessionHelper(this);
+                    return sessionHelper;
+                });
+    }
+
+    public HttpSessionHelper http() {
+        return Optional.ofNullable(httpSessionHelper)
+                .orElseGet(() -> {
+                    httpSessionHelper = new HttpSessionHelper(this);
+                    return httpSessionHelper;
+                });
+    }
+
+    public String property(String name){
+        return properties.getProperty(name);
+    }
+
+    public JamesCliHelper jamesCli() {
+        return Optional.ofNullable(jamesCliHelper)
+                .orElseGet(() -> {
+                    jamesCliHelper = new JamesCliHelper(this);
+                    return jamesCliHelper;
+                });
+    }
+
+    public MailHelper mail() {
+        return Optional.ofNullable(mailHelper)
+                .orElseGet(() -> {
+                    mailHelper = new MailHelper(this);
+                    return mailHelper;
+                });
+    }
+
 }

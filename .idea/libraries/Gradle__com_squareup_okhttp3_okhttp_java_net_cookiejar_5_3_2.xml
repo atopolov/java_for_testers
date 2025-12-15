@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: com.squareup.okhttp3:okhttp-java-net-cookiejar:5.3.2" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="com.squareup.okhttp3" artifactId="okhttp-java-net-cookiejar" version="5.3.2" baseVersion="5.3.2" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp-java-net-cookiejar/5.3.2/eda9683e218b7444e0ebfea9f074521e7dbfd14b/okhttp-java-net-cookiejar-5.3.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
