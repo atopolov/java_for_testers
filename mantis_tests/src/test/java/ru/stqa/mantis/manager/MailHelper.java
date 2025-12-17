@@ -8,8 +8,17 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MailHelper extends HelperBase {
+
+    private static final String PROTOCOL = "pop3";
+    private static final String HOST = "localhost";
+    private static final String INBOX_FOLDER = "INBOX";
+    private static final String CONFIRMATION_LINK_REGEX = "http://\\S+";
+    private static final Duration DEFAULT_MAIL_WAIT = Duration.ofSeconds(60);
+    private static final long SLEEP_INTERVAL = 1000;
 
     public MailHelper(ApplicationManager manager) {
         super(manager);
@@ -41,7 +50,7 @@ public class MailHelper extends HelperBase {
                 throw new RuntimeException(e);
             }
             try {
-                Thread.sleep(1000);
+                Thread.sleep(SLEEP_INTERVAL);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -52,9 +61,9 @@ public class MailHelper extends HelperBase {
     private static Folder getInbox(String username, String password) {
         try {
             var session = Session.getInstance(new Properties());
-            Store store = session.getStore("pop3");
-            store.connect("localhost", username, password);
-            var inbox = store.getFolder("INBOX");
+            Store store = session.getStore(PROTOCOL);
+            store.connect(HOST, username, password);
+            var inbox = store.getFolder(INBOX_FOLDER);
             return inbox;
         } catch (MessagingException e) {
             throw new RuntimeException(e);
@@ -78,6 +87,22 @@ public class MailHelper extends HelperBase {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public String getLinkFromLastMail(String username, String password) {
+        var messages = receive(username, password, DEFAULT_MAIL_WAIT);
+
+        var lastMessage = messages.get(messages.size() - 1);
+        var text = lastMessage.content();
+
+        Pattern pattern = Pattern.compile(CONFIRMATION_LINK_REGEX);
+        Matcher matcher = pattern.matcher(text);
+
+        if (matcher.find()) {
+            return text.substring(matcher.start(), matcher.end());
+        }
+
+        throw new RuntimeException("No confirmation link found in email");
     }
 
 }

@@ -6,21 +6,31 @@ import ru.stqa.mantis.generator.EmailData;
 
 import java.time.Duration;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class UserRegistrationTests extends TestBase {
 
     @Test
     @DisplayName("Регистрация пользователя")
     public void canRegisterUser() throws InterruptedException {
-        var email = String.format("%s@localhost", EmailData.randomEmail());
-        var username = EmailData.randomEmail();
-        var password = "password";
+
+        String username = EmailData.randomUsername();
+        String email = username + "@localhost";
+        String password = "password";
+
+        app.mail().deleteAll(email, password);
 
         app.jamesCli().addUser(email, password);
-        app.session().registerUser(email, password);
+
+        app.registration().start(username,email);
+
         app.mail().receive(email, password, Duration.ofSeconds(60));
         String link = app.mail().getLinkFromLastMail(email, password);
-        app.session().finishRegistration(link,password);
+
+        app.registration().finish(link, password);
+        assertTrue(app.registration().isFinished());
 
         app.http().login(username, password);
+        assertTrue(app.http().isLoggedIn());
     }
 }

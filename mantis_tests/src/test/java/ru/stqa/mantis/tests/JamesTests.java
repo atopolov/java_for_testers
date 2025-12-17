@@ -11,7 +11,7 @@ public class JamesTests extends TestBase {
     @Test
     @DisplayName("Создание пользователя")
     public void canCreateUser() throws InterruptedException, IOException {
-        app.jamesCli().addUser(String.format("%s@localhost", EmailData.randomEmail()),
+        app.jamesCli().addUser(String.format("%s@localhost", EmailData.randomUsername()),
                 "password");
     }
 }

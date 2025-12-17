@@ -8,8 +8,8 @@ public class EmailData {
 
     private EmailData() {}
 
-    public static String randomEmail() {
-        return faker.lorem().word();
+    public static String randomUsername() {
+        return faker.name().username();
     }
 
 }

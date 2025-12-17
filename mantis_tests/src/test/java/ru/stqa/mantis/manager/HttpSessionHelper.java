@@ -7,6 +7,9 @@ import java.net.CookieManager;
 
 public class HttpSessionHelper extends HelperBase {
 
+    private static final String LOGIN_PAGE = "login.php";
+    private static final String LOGOUT_TEXT = "Logout";
+
     OkHttpClient client;
 
     public HttpSessionHelper(ApplicationManager manager) {
@@ -21,7 +24,7 @@ public class HttpSessionHelper extends HelperBase {
                 .build();
 
         Request request = new Request.Builder()
-                .url(String.format("%s/login.php",
+                .url(String.format("%s/" + LOGIN_PAGE,
                         manager.property("web.baseUrl")))
                 .post(formBody)
                 .build();
@@ -43,7 +46,7 @@ public class HttpSessionHelper extends HelperBase {
             if (!response.isSuccessful()) throw new RuntimeException("Unexpected code " + response);
 
             String body = response.body().string();
-            return body.contains("Logout");
+            return body.contains(LOGOUT_TEXT);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

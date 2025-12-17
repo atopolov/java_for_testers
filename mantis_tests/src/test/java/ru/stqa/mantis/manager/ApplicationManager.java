@@ -21,6 +21,7 @@ public class ApplicationManager {
     private HttpSessionHelper httpSessionHelper;
     private JamesCliHelper jamesCliHelper;
     private MailHelper mailHelper;
+    private RegistrationHelper registrationHelper;
 
     public void init(String browser, Properties properties) {
         this.properties = properties;
@@ -38,7 +39,7 @@ public class ApplicationManager {
     }
 
     public void openHomePage() {
-        driver.get(properties.getProperty("web.baseUrl"));
+        driver().get(properties.getProperty("web.baseUrl"));
     }
 
     private WebDriver createDriver(String browser) {
@@ -98,6 +99,14 @@ public class ApplicationManager {
                 .orElseGet(() -> {
                     mailHelper = new MailHelper(this);
                     return mailHelper;
+                });
+    }
+
+    public RegistrationHelper registration() {
+        return Optional.ofNullable(registrationHelper)
+                .orElseGet(() -> {
+                    registrationHelper = new RegistrationHelper(this);
+                    return registrationHelper;
                 });
     }
 
