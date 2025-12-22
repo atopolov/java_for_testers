@@ -22,6 +22,9 @@ public class ApplicationManager {
     private JamesCliHelper jamesCliHelper;
     private MailHelper mailHelper;
     private RegistrationHelper registrationHelper;
+    private JamesApiHelper jamesApiHelper;
+    private RestApiHelper restApiHelper;
+    private SoapApiHelper soapApiHelper;
 
     public void init(String browser, Properties properties) {
         this.properties = properties;
@@ -109,5 +112,30 @@ public class ApplicationManager {
                     return registrationHelper;
                 });
     }
+
+    public JamesApiHelper jamesApi() {
+        return Optional.ofNullable(jamesApiHelper)
+                .orElseGet(() -> {
+                    jamesApiHelper = new JamesApiHelper(this);
+                    return jamesApiHelper;
+                });
+    }
+
+    public RestApiHelper rest() {
+        return Optional.ofNullable(restApiHelper)
+                .orElseGet(() -> {
+                    restApiHelper = new RestApiHelper(this);
+                    return restApiHelper;
+                });
+    }
+
+    public SoapApiHelper soap() {
+        return Optional.ofNullable(soapApiHelper)
+                .orElseGet(() -> {
+                    soapApiHelper = new SoapApiHelper(this);
+                    return soapApiHelper;
+                });
+    }
+
 
 }
