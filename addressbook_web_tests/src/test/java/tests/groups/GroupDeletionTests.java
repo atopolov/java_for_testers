@@ -27,10 +27,7 @@ public class GroupDeletionTests extends TestBase {
             }
         });
 
-        var oldGroups = Allure.step(
-                "Get list of existing groups",
-                app.hbm()::getGroupList
-        );
+        var oldGroups = Allure.step("Get list of existing groups", () -> app.hbm().getGroupList());
         var rnd = new Random();
         var index = rnd.nextInt(oldGroups.size());
 

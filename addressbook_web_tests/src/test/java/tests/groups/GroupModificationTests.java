@@ -29,10 +29,9 @@ public class GroupModificationTests extends TestBase {
             }
         });
 
-        var oldGroups = Allure.step(
-                "Get list of groups before modification",
-                app.hbm()::getGroupList
-        );
+        var oldGroups = Allure.step("Get list of groups before modification", () ->
+                app.hbm().getGroupList());
+
         var rnd = new Random();
         var index = rnd.nextInt(oldGroups.size());
         var testData = Allure.step(

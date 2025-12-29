@@ -214,7 +214,8 @@ public class ContactHelper extends HelperBase {
     }
 
     public static String cleanPhone(String phone) {
-        return phone.replaceAll("[^0-9]", "");
+        if(phone == null) return "";
+        return phone.replaceAll("[^0-9]", ""); // оставляем только цифры
     }
 
     private String getValue(String fieldName) {

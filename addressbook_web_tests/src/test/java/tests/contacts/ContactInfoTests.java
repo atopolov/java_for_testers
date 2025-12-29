@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tests.TestBase;
 
+import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,62 +30,45 @@ public class ContactInfoTests extends TestBase {
             }
         });
 
-        var contactList = app.contacts().getContactList();
-        var contact = Allure.step(
-                "Get last contact from contact list",
-                () -> app.contacts().getContactList().getLast()
-        );
+        Allure.step("Get last contact from contact list", () -> {});
+        var contact = app.contacts().getContactList().getLast();
 
+        var rawPhones = app.contacts().getPhones(contact);
+        var rawEmails = app.contacts().getEmails(contact);
+        var rawAddress = app.contacts().getAddress(contact);
 
-        var phones = Allure.step(
-                "Get phones from main page",
-                () -> app.contacts().getPhones(contact)
-        );
+        var contactFromEdit = app.contacts().getContactFromEditForm(contact);
 
-        var emails = Allure.step(
-                "Get emails from main page",
-                () -> app.contacts().getEmails(contact)
-        );
+        var phones = Arrays.stream(rawPhones.split("\n"))
+                .map(ContactHelper::cleanPhone)
+                .filter(s -> !s.isBlank())
+                .collect(Collectors.joining("\n"));
 
-        var address = Allure.step(
-                "Get address from main page",
-                () -> app.contacts().getAddress(contact)
-        );
+        var expectedPhones = Stream.of(
+                        contactFromEdit.phone(),
+                        contactFromEdit.mobile(),
+                        contactFromEdit.work()
+                )
+                .filter(s -> s != null && !s.isBlank())
+                .map(ContactHelper::cleanPhone)
+                .collect(Collectors.joining("\n"));
 
-        var contactFromEdit = Allure.step(
-                "Get contact data from edit form",
-                () -> app.contacts().getContactFromEditForm(contact)
-        );
+        var emails = Arrays.stream(rawEmails.split("\n"))
+                .map(s -> s == null ? "" : s.trim().toLowerCase())
+                .filter(s -> !s.isBlank())
+                .collect(Collectors.joining("\n"));
 
-        var expectedPhones = Allure.step(
-                "Build expected phones from edit form",
-                () -> Stream.of(
-                                contactFromEdit.phone(),
-                                contactFromEdit.mobile(),
-                                contactFromEdit.work()
-                        )
-                        .filter(s -> s != null && !s.isEmpty())
-                        .map(ContactHelper::cleanPhone)
-                        .collect(Collectors.joining("\n"))
-        );
+        var expectedEmails = Stream.of(
+                        contactFromEdit.email(),
+                        contactFromEdit.email2(),
+                        contactFromEdit.email3()
+                )
+                .filter(s -> s != null && !s.isBlank())
+                .map(s -> s.trim().toLowerCase())
+                .collect(Collectors.joining("\n"));
 
-        var expectedEmails = Allure.step(
-                "Build expected emails from edit form",
-                () -> Stream.of(
-                                contactFromEdit.email(),
-                                contactFromEdit.email2(),
-                                contactFromEdit.email3()
-                        )
-                        .filter(s -> s != null && !s.isBlank())
-                        .map(String::trim)
-                        .map(String::toLowerCase)
-                        .collect(Collectors.joining("\n"))
-        );
-
-        var expectedAddress = Allure.step(
-                "Build expected address from edit form",
-                () -> contactFromEdit.address().trim()
-        );
+        var address = rawAddress == null ? "" : rawAddress.trim();
+        var expectedAddress = contactFromEdit.address() == null ? "" : contactFromEdit.address().trim();
 
         System.out.println("=== Checking contact info ===");
         System.out.println("Contact ID: " + contact.id());
@@ -96,17 +80,8 @@ public class ContactInfoTests extends TestBase {
         System.out.println("Edit form - address:\n" + expectedAddress);
         System.out.println("==========================");
 
-        Allure.step("Verify phones match", () -> {
-            assertEquals(expectedPhones, phones);
-        });
-
-        Allure.step("Verify emails match", () -> {
-            assertEquals(expectedEmails, emails);
-        });
-
-        Allure.step("Verify address matches", () -> {
-            assertEquals(expectedAddress, address);
-        });
+        Allure.step("Verify phones match", () -> assertEquals(expectedPhones, phones));
+        Allure.step("Verify emails match", () -> assertEquals(expectedEmails, emails));
+        Allure.step("Verify address matches", () -> assertEquals(expectedAddress, address));
     }
 }
-
