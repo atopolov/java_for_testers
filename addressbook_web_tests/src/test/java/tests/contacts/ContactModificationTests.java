@@ -1,5 +1,6 @@
 package tests.contacts;
 
+import io.qameta.allure.*;
 import model.ContactsData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -14,46 +15,75 @@ import java.util.Set;
 import static model.ContactsDataGenerator.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Epic("Address Book")
+@Feature("Contacts management")
 public class ContactModificationTests extends TestBase {
 
-    @DisplayName("Изменение контакта")
     @Test
+    @DisplayName("Modifying a contact")
+    @Description("Test verifies that contact information matches the edit form")
+    @Severity(SeverityLevel.CRITICAL)
     public void modifyContactTest() {
-        if (app.hbm().getContactsCount() == 0) {
-            app.hbm().createContacts(randomContactsData());
-        }
 
-        List<ContactsData> oldContacts = app.hbm().getContactsList();
+        Allure.step("Ensure at least one contact exists", () -> {
+            if (app.hbm().getContactsCount() == 0) {
+                app.hbm().createContacts(randomContactsData());
+            }
+        });
+
+        List<ContactsData> oldContacts = Allure.step(
+                "Get list of contacts before modification",
+                app.hbm()::getContactsList
+        );
         Random rnd = new Random();
         int index = rnd.nextInt(oldContacts.size());
 
         ContactsData originalContact = oldContacts.get(index);
-        ContactsData modifiedContact = new ContactsData(
-                originalContact.id(),
-                randomFirstName(),
-                randomLastName(),
-                randomMiddleName(),
-                randomNickname(),
-                randomTitle(),
-                randomCompany(),
-                randomAddress(),
-                randomHomePhone(),
-                randomMobilePhone(),
-                randomWorkPhone(),
-                randomEmail(),
-                randomEmail2(),
-                randomEmail3(),
-                randomHomePage(),
-                originalContact.photo()
+
+        Allure.parameter("Original contact", originalContact.toString());
+
+        ContactsData modifiedContact = Allure.step(
+                "Prepare modified contact data",
+                () -> new ContactsData(
+                        originalContact.id(),
+                        randomFirstName(),
+                        randomLastName(),
+                        randomMiddleName(),
+                        randomNickname(),
+                        randomTitle(),
+                        randomCompany(),
+                        randomAddress(),
+                        randomHomePhone(),
+                        randomMobilePhone(),
+                        randomWorkPhone(),
+                        randomEmail(),
+                        randomEmail2(),
+                        randomEmail3(),
+                        randomHomePage(),
+                        originalContact.photo()
+                )
         );
 
-        app.contacts().modifyContact(originalContact, modifiedContact);
+        Allure.parameter("Modified contact", modifiedContact.toString());
 
-        var newContacts = app.hbm().getContactsList();
+        Allure.step("Modify selected contact", () -> {
+            app.contacts().modifyContact(originalContact, modifiedContact);
+        });
 
-        var expectedList = new ArrayList<>(oldContacts);
-        expectedList.set(index, modifiedContact);
+        var newContacts = Allure.step(
+                "Get list of contacts after modification",
+                app.hbm()::getContactsList
+        );
 
-        Assertions.assertEquals(Set.copyOf(expectedList), Set.copyOf(newContacts), "Списки контактов не совпадают после модификации");
+        Allure.step("Verify contact list updated correctly", () -> {
+            List<ContactsData> expectedList = new ArrayList<>(oldContacts);
+            expectedList.set(index, modifiedContact);
+
+            Assertions.assertEquals(
+                    Set.copyOf(expectedList),
+                    Set.copyOf(newContacts),
+                    "Lists of contacts do not match after modifying a contact"
+            );
+        });
     }
 }

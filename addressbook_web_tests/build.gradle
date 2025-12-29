@@ -9,6 +9,16 @@ repositories {
     mavenCentral()
 }
 
+def allureVersion = "2.36.0"
+def aspectjVersion = "1.9.20.1"
+
+configurations {
+    agent {
+        canBeResolved = true
+        canBeConsumed = true
+    }
+}
+
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
@@ -23,6 +33,11 @@ dependencies {
     implementation 'org.hibernate.orm:hibernate-core:6.4.4.Final'
     implementation 'org.slf4j:slf4j-api:2.0.7'
     testImplementation 'org.slf4j:slf4j-simple:2.0.7'
+
+    agent "org.aspectj:aspectjweaver:$aspectjVersion"
+
+    testImplementation platform ("io.qameta.allure:allure-bom:$allureVersion")
+    testImplementation "io.qameta.allure:allure-junit5"
 }
 
 java {
@@ -48,6 +63,7 @@ test {
 
     systemProperty "org.jboss.logging.provider", "none"
     jvmArgs "-Dorg.hibernate.SQL=OFF", "-Dorg.hibernate.type=OFF"
+    jvmArgs = [ "-javaagent:${configurations.agent.singleFile}" ]
 
     systemProperty "hibernate.show_sql", "false"
     systemProperty "hibernate.format_sql", "false"

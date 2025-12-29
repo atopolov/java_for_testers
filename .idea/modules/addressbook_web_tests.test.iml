@@ -75,6 +75,8 @@
     <orderEntry type="library" name="Gradle: io.opentelemetry:opentelemetry-sdk-metrics:1.55.0" level="project" />
     <orderEntry type="library" name="Gradle: io.opentelemetry:opentelemetry-sdk-logs:1.55.0" level="project" />
     <orderEntry type="library" name="Gradle: io.opentelemetry:opentelemetry-common:1.55.0" level="project" />
+    <orderEntry type="library" name="Gradle: io.qameta.allure:allure-bom:2.36.0" level="project" />
+    <orderEntry type="library" name="Gradle: io.qameta.allure:allure-junit5:" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.junit.platform:junit-platform-launcher:1.10.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jboss.logging:jboss-logging:3.5.0.Final" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.hibernate.common:hibernate-commons-annotations:6.0.6.Final" level="project" />

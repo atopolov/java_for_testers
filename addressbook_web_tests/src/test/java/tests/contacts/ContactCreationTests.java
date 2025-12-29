@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import io.qameta.allure.*;
 import model.ContactsData;
 import model.ContactsDataGenerator;
 import org.junit.jupiter.api.Assertions;
@@ -23,6 +24,8 @@ import static model.GroupDataGenerator.randomGroupData;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@Epic("Address Book")
+@Feature("Contacts management")
 public class ContactCreationTests extends TestBase {
 
     public static final String CONTACTS_XML = "contacts.xml";
@@ -32,7 +35,7 @@ public class ContactCreationTests extends TestBase {
         File file = new File(filePath);
 
         if (!file.exists()) {
-            throw new IllegalArgumentException("Файл с контактами не найден: " + file.getAbsolutePath());
+            throw new IllegalArgumentException("File with contacts not found: " + file.getAbsolutePath());
         }
 
         ObjectMapper mapper;
@@ -44,65 +47,99 @@ public class ContactCreationTests extends TestBase {
         } else if (fileName.endsWith(".json")) {
             mapper = new ObjectMapper();
         } else {
-            throw new IllegalArgumentException("Неподдерживаемый формат файла: " + CONTACTS_XML);
+            throw new IllegalArgumentException("Unsupported file format: " + CONTACTS_XML);
         }
 
         return mapper.readValue(file, new TypeReference<>() {
         });
     }
 
-    @DisplayName("Параметризованное создание контактов")
+
     @ParameterizedTest
+    @DisplayName("Parameterized contact creation")
+    @Description("Test verifies that a new contact can be created using parameterized data")
+    @Severity(SeverityLevel.CRITICAL)
     @MethodSource("multipleContactsProvider")
     public void createContactTest(ContactsData contact) {
 
-        var oldContacts = app.hbm().getContactsList();
-        app.contacts().createContact(contact);
-        var newContacts = app.hbm().getContactsList();
+        var oldContacts = Allure.step(
+                "Get list of contacts before creation",
+                app.hbm()::getContactsList
+        );
 
-        assertEquals(oldContacts.size() + 1, newContacts.size(), "Количество контактов не увеличилось");
+        Allure.step("Create new contact", () -> {
+            app.contacts().createContact(contact);
+        });
 
-        ContactsData created = null;
-        for (ContactsData c : newContacts) {
-            if (!oldContacts.contains(c)) {
-                created = c;
-                break;
-            }
-        }
+        var newContacts = Allure.step(
+                "Get list of contacts after creation",
+                app.hbm()::getContactsList
+        );
 
-        assertNotNull(created, "Созданный контакт не найден");
-        assertNotNull(created.id(), "У созданного контакта нет id");
+        Allure.step("Verify contact count increased by 1", () -> {
+            assertEquals(oldContacts.size() + 1, newContacts.size(),
+                    "Number of contacts did not increase");
+        });
 
-        List<ContactsData> expectedList = new ArrayList<>(oldContacts);
-        expectedList.add(created);
+        Allure.step("Verify created contact is present in the list", () -> {
+            ContactsData created = newContacts.stream()
+                    .filter(c -> !oldContacts.contains(c))
+                    .findFirst()
+                    .orElse(null);
 
-        expectedList.sort(Comparator.comparing(ContactsData::firstname)
-                .thenComparing(ContactsData::lastname));
-        newContacts.sort(Comparator.comparing(ContactsData::firstname)
-                .thenComparing(ContactsData::lastname));
+            assertNotNull(created, "Created contact not found");
+            assertNotNull(created.id(), "Created contact ID is null");
 
-        assertEquals(expectedList, newContacts, "Списки контактов не совпадают после создания нового контакта");
+            List<ContactsData> expectedList = new ArrayList<>(oldContacts);
+            expectedList.add(created);
+
+            expectedList.sort(
+                    Comparator.comparing(ContactsData::firstname)
+                            .thenComparing(ContactsData::lastname)
+            );
+            newContacts.sort(
+                    Comparator.comparing(ContactsData::firstname)
+                            .thenComparing(ContactsData::lastname)
+            );
+
+            assertEquals(expectedList, newContacts,
+                    "Lists of contacts do not match after creating a new contact");
+        });
     }
 
-    @DisplayName("Добавление контакта в группу")
+
     @Test
+    @DisplayName("Adding existing contact to group")
+    @Description("Test verifies that an existing contact can be added to a group")
+    @Severity(SeverityLevel.CRITICAL)
     public void canAddExistingContactToGroup() {
 
-        if (app.hbm().getGroupCount() == 0) {
-            app.hbm().createGroup(randomGroupData());
-        }
+        Allure.step("Ensure at least one group exists", () -> {
+            if (app.hbm().getGroupCount() == 0) {
+                app.hbm().createGroup(randomGroupData());
+            }
+        });
 
-        var group = app.hbm().getGroupList().getFirst();
+        var group = Allure.step(
+                "Get first available group",
+                () -> app.hbm().getGroupList().getFirst()
+        );
 
         var contact = ContactsDataGenerator.randomContactsData();
 
-        if (app.hbm().getContactsCount() == 0) {
-            app.contacts().createContact(contact,
-                    null
-            );
-        }
+        Allure.step("Ensure at least one contact exists", () -> {
+            if (app.hbm().getContactsCount() == 0) {
+                app.contacts().createContact(contact,
+                        null
+                );
+            }
+        });
 
-        var contactsNotInGroup = app.hbm().getContactsNotInGroup(group);
+        var contactsNotInGroup = Allure.step(
+                "Get contacts not assigned to the group",
+                () -> app.hbm().getContactsNotInGroup(group)
+        );
+
 
         if (contactsNotInGroup.isEmpty()) {
             var newContact = ContactsDataGenerator.randomContactsData();
@@ -116,25 +153,30 @@ public class ContactCreationTests extends TestBase {
 
         var oldRelated = app.hbm().getContactsInGroup(group);
 
-        app.contacts().addContactToGroup(contactToAdd, group);
+        Allure.step("Add contact to group", () -> {
+            app.contacts().addContactToGroup(contactToAdd, group);
+        });
 
-        var newRelated = app.hbm().getContactsInGroup(group);
-
-        Assertions.assertEquals(
-                oldRelated.size() + 1,
-                newRelated.size(),
-                "Количество контактов в группе должно увеличиться на 1"
+        var newRelated =Allure.step(
+                "Get contacts in group after adding",
+                () -> app.hbm().getContactsInGroup(group)
         );
 
-        boolean contactAdded = false;
-        for (var c : newRelated) {
-            if (c.id().equals(contactToAdd.id())) {
-                contactAdded = true;
-                break;
-            }
-        }
-        Assertions.assertTrue(contactAdded,
-                "Добавленный контакт должен присутствовать в группе");
+        Allure.step("Verify number of contacts in group increased by 1", () -> {
+            Assertions.assertEquals(
+                    oldRelated.size() + 1,
+                    newRelated.size(),
+                    "Number of contacts in group did not increase"
+            );
+        });
+
+        Allure.step("Verify contact is present in the group", () -> {
+            boolean contactAdded = newRelated.stream()
+                    .anyMatch(c -> c.id().equals(contactToAdd.id()));
+
+            Assertions.assertTrue(contactAdded,
+                    "Added contact is not present in the group");
+        });
     }
 }
 

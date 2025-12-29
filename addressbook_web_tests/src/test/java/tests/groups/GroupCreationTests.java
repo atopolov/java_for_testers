@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import io.qameta.allure.*;
 import model.GroupData;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,6 +23,8 @@ import static model.GroupDataGenerator.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@Epic("Address Book")
+@Feature("Groups management")
 public class GroupCreationTests extends TestBase {
 
     public static final String GROUPS_XML = "groups.xml";
@@ -31,7 +34,7 @@ public class GroupCreationTests extends TestBase {
         File file = new File(filePath);
 
         if (!file.exists()) {
-            throw new IllegalArgumentException("Файл с группами не найден: " + file.getAbsolutePath());
+            throw new IllegalArgumentException("File with groups not found: " + file.getAbsolutePath());
         }
 
         ObjectMapper mapper;
@@ -44,7 +47,7 @@ public class GroupCreationTests extends TestBase {
         } else if (fileName.endsWith(".yaml")) {
             mapper = new ObjectMapper(new YAMLFactory());
         } else {
-            throw new IllegalArgumentException("Неподдерживаемый формат файла: " + file.getAbsolutePath());
+            throw new IllegalArgumentException("Unsupported file format: " + file.getAbsolutePath());
         }
 
         return mapper.readValue(file, new TypeReference<List<GroupData>>() {
@@ -62,33 +65,68 @@ public class GroupCreationTests extends TestBase {
                 .limit(3);
     }
 
-    @DisplayName("Параметризованное создание группы")
+    @Severity(SeverityLevel.CRITICAL)
+    @DisplayName("Parameterized group creation")
+    @Description("Test verifies that a new group can be created using parameterized data")
     @ParameterizedTest
     @MethodSource("multipleGroupProvider")
     public void GroupCreationTest(GroupData group) {
 
-        var oldGroups = app.hbm().getGroupList();
-        app.groups().createGroup(group);
-        var newGroups = app.hbm().getGroupList();
+        var oldGroups = Allure.step(
+                "Get list of groups before creation",
+                () -> app.hbm().getGroupList()
+        );
+        Allure.step("Create new group", () -> {
+            app.groups().createGroup(group);
+        });
+        var newGroups = Allure.step(
+                "Get list of groups after creation",
+                () -> app.hbm().getGroupList()
+        );
 
-        GroupData created = null;
-        created = newGroups.stream()
-                .filter(g -> !oldGroups.contains(g))
-                .findFirst()
-                .orElse(null);
+        GroupData created = Allure.step(
+                "Find newly created group",
+                () -> newGroups.stream()
+                        .filter(g -> !oldGroups.contains(g))
+                        .findFirst()
+                        .orElse(null)
+        );
 
-        assertNotNull(created, "Созданная группа не найдена");
-        assertNotNull(created.id(), "У созданной группы нет id");
+        Allure.step("Verify created group exists", () -> {
+            assertNotNull(created, "Created group not found");
+        });
 
-        List<GroupData> expectedList = new ArrayList<>(oldGroups);
-        expectedList.add(created);
+        Allure.step("Verify created group has ID", () -> {
+            assertNotNull(created.id(), "Created group ID is null");
+        });
 
-        assertEquals(Set.copyOf(newGroups), Set.copyOf(expectedList));
+        List<GroupData> expectedList = Allure.step(
+                "Build expected group list",
+                () -> {
+                    List<GroupData> list = new ArrayList<>(oldGroups);
+                    list.add(created);
+                    return list;
+                }
+        );
 
-        assertEquals(expectedList, newGroups, "Списки групп не совпадают после создания новой группы");
+        Allure.step("Verify group list matches expected (set comparison)", () -> {
+            assertEquals(Set.copyOf(newGroups), Set.copyOf(expectedList));
+        });
 
-        var newUiGroups = app.hbm().getGroupList();
-        assertEquals(expectedList, newUiGroups, "Списки групп не совпадают после создания новой группы");
+        Allure.step("Verify group list matches expected (list comparison)", () -> {
+            assertEquals(expectedList, newGroups,
+                    "Lists of groups do not match after creating a new group");
+        });
+
+        var newUiGroups = Allure.step(
+                "Get group list from UI",
+                () -> app.hbm().getGroupList()
+        );
+
+        Allure.step("Verify UI group list matches expected", () -> {
+            assertEquals(expectedList, newUiGroups,
+                    "Lists of groups do not match after creating a new group");
+        });
     }
 }
 
