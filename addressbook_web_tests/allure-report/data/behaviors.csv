@@ -1,3 +1,3 @@
-"BROKEN","EPIC","FAILED","FEATURE","PASSED","SKIPPED","STORY","UNKNOWN"
-"0","Address Book","0","Contacts management","9","0","","0"
-"0","Address Book","0","Groups management","6","0","","0"
+"Epic","Feature","Story","FAILED","BROKEN","PASSED","SKIPPED","UNKNOWN"
+"Address Book","Contacts management","","1","1","7","0","0"
+"Address Book","Groups management","","0","2","4","0","0"

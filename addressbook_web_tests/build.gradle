@@ -9,7 +9,7 @@ repositories {
     mavenCentral()
 }
 
-def allureVersion = "2.36.0"
+def allureVersion = "2.24.0"
 def aspectjVersion = "1.9.20.1"
 
 configurations {
