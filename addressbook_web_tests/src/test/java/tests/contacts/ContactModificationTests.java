@@ -33,7 +33,7 @@ public class ContactModificationTests extends TestBase {
 
         List<ContactsData> oldContacts = Allure.step(
                 "Get list of contacts before modification",
-                app.hbm()::getContactsList
+                () -> app.hbm().getContactsList()
         );
         Random rnd = new Random();
         int index = rnd.nextInt(oldContacts.size());
@@ -70,10 +70,7 @@ public class ContactModificationTests extends TestBase {
             app.contacts().modifyContact(originalContact, modifiedContact);
         });
 
-        var newContacts = Allure.step(
-                "Get list of contacts after modification",
-                app.hbm()::getContactsList
-        );
+        var newContacts = Allure.step("Get list of contacts after modification", () -> app.hbm().getContactsList());
 
         Allure.step("Verify contact list updated correctly", () -> {
             List<ContactsData> expectedList = new ArrayList<>(oldContacts);

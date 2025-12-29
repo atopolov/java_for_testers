@@ -35,10 +35,7 @@ public class GroupDeletionTests extends TestBase {
         app.groups().removeGroup(oldGroups.get(index));
         });
 
-        var newGroups = Allure.step(
-                "Get list of groups after deletion",
-                app.hbm()::getGroupList
-        );
+        var newGroups = Allure.step("Get list of groups after deletion", () -> app.hbm().getGroupList());
 
         Allure.step("Verify group list updated correctly", () -> {
             var expectedList = new ArrayList<>(oldGroups);

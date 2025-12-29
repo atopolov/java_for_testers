@@ -41,10 +41,8 @@ public class GroupModificationTests extends TestBase {
         Allure.step("Modify selected group", () -> {
                     app.groups().modifyGroup(oldGroups.get(index), testData);
                 });
-        var newGroups = Allure.step(
-                "Get list of groups after modification",
-                app.hbm()::getGroupList
-        );
+        var newGroups = Allure.step("Get list of groups after deletion", () -> app.hbm().getGroupList());
+        
         Allure.step("Verify group list updated correctly", () -> {
         var expectedList = new ArrayList<>(oldGroups);
         expectedList.set(index, testData.withId(oldGroups.get(index).id()));
